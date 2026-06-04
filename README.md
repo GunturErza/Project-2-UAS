@@ -38,3 +38,6 @@ Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pen
    ---------------------------
 
 ## BAB 2: DASAR TEORI  
+### 2.1 Struktur Data Graph
+Graph (Graf) adalah struktur data non-linear yang terdiri dari sekumpulan simpul ($V$ atau Vertex/Node) dan sekumpulan sisi ($E$ atau Edge) yang menghubungkan sepasang simpul. Secara matematis dinotasikan sebagai $G = (V, E)$.
+
