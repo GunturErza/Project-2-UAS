@@ -87,8 +87,28 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 ### 3.4 Use Case Diagram
 *Aktor:* Pengguna / Mahasiswa.
 
-* Aktivitas:*
+* Aktivitas:
 1.  Mengatur filter budget bulanan kost.
 2.  Memilih lokasi kost yang tersedia hasil filtrasi.
 3.  Melihat visualisasi jaringan graf penunjang rute.
 4.  Menerima rekomendasi hasil analisis keputusan rute terpendek dan urutan jalur lintasan.
+
+### 3.5 Detail Struktur Node dan Edge pada Sistem
+Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian datanya:
+* *Daftar Node ($V$):*
+1. KAMPUS (Label: Kampus Utama, Tipe: Kampus)
+2. KOST_A (Label: Kost Exclusif A, Tipe: Kost, Harga: Rp 1.500.000)
+3. KOST_B (Label: Kost Muslimah B, Tipe: Kost, Harga: Rp 800.000)
+4. KOST_C (Label: Kost Campur C, Tipe: Kost, Harga: Rp 1.100.000)
+5. FAC_1 (Label: Warmindo & Laundry, Tipe: Fasilitas)
+6. FAC_2 (Label: Minimarket, Tipe: Fasilitas)
+
+* 
+*Daftar Edge ($E$) dan Bobot Jarak:*
+* KOST_A ── FAC_1 : 200 meter
+* FAC_1 ── KAMPUS : 500 meter
+* KOST_B ── FAC_2 : 400 meter
+* FAC_2 ── KAMPUS : 600 meter
+* KOST_C ── FAC_1 : 300 meter
+* KOST_C ── FAC_2 : 350 meter
+* FAC_1 ── FAC_2 : 150 meter
