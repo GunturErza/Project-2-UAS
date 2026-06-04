@@ -86,8 +86,8 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 
 ### 3.4 Use Case Diagram
 *Aktor:* Pengguna / Mahasiswa.
-*
-*Aktivitas:*
+
+* Aktivitas:*
 1.  Mengatur filter budget bulanan kost.
 2.  Memilih lokasi kost yang tersedia hasil filtrasi.
 3.  Melihat visualisasi jaringan graf penunjang rute.
