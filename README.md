@@ -41,3 +41,15 @@ Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pen
 ### 2.1 Struktur Data Graph
 Graph (Graf) adalah struktur data non-linear yang terdiri dari sekumpulan simpul ($V$ atau Vertex/Node) dan sekumpulan sisi ($E$ atau Edge) yang menghubungkan sepasang simpul. Secara matematis dinotasikan sebagai $G = (V, E)$.
 
+* *Undirected Graph:* Graf yang sisinya tidak memiliki arah, artinya jika ada sisi yang menghubungkan simpul $A$ dan $B$, maka perjalanan dapat dilakukan dari $A$ ke $B$ maupun dari $B$ ke $A$ dengan bobot yang sama.
+
+* *Weighted Graph:* Graf yang setiap sisinya memiliki nilai atau bobot (weight) tertentu yang merepresentasikan jarak, biaya, atau waktu tempuh. Pada sistem ini, bobot merepresentasikan jarak dalam satuan meter.
+
+### 2.2 Decision Support System (DSS)
+Decision Support System (DSS) atau Sistem Pendukung Keputusan adalah sistem berbasis komputer yang membantu pengambilan keputusan dengan mengeksplorasi berbagai alternatif solusi berdasarkan data dan kriteria tertentu. DSS dalam proyek ini bekerja dengan metode eliminasi batasan (constraint-based filtering) untuk menyaring harga kost, dilanjutkan dengan metode optimasi rute terpendek (shortest path).
+
+### 2.3 Algoritma Dijkstra
+Algoritma Dijkstra adalah algoritma rakus (greedy algorithm) yang digunakan untuk mencari jalur terpendek dari satu simpul sumber (single-source shortest path) ke simpul lainnya pada sebuah graf berbobot positif. Algoritma ini bekerja dengan cara:
+1. Menentukan nilai jarak awal ke semua simpul sebesar tak hingga ($\infty$), kecuali simpul awal yang diberi nilai $0$.
+2. Menyimpan simpul ke dalam antrean prioritas (priority queue / min-heap) berdasarkan bobot terkecil.
+3. Mengunjungi simpul tetangga yang belum dikunjungi, memperbarui nilai jaraknya jika jalur baru lebih pendek (relaxation), dan memasukkannya kembali ke antrean prioritas hingga simpul tujuan tercapai.
