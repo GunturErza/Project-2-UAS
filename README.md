@@ -65,3 +65,30 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 * *Struktur Node (Simpul):* Merepresentasikan lokasi. Memiliki atribut ID, Label, Tipe (Kampus, Kost, Fasilitas), dan Biaya sewa (khusus tipe Kost).
 * *Struktur Edge (Sisi):* Merepresentasikan akses jalan penghubung antarlokasi dengan atribut bobot berupa jarak dalam meter.
 
+### 3.3 Flowchart Sistem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 3.4 Use Case Diagram
+*Aktor:* Pengguna / Mahasiswa.
+*
+*Aktivitas:*
+1.  Mengatur filter budget bulanan kost.
+2.  Memilih lokasi kost yang tersedia hasil filtrasi.
+3.  Melihat visualisasi jaringan graf penunjang rute.
+4.  Menerima rekomendasi hasil analisis keputusan rute terpendek dan urutan jalur lintasan.
