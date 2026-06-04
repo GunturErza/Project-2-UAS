@@ -32,5 +32,4 @@ Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pen
 3. Membangun aplikasi DSS interaktif menggunakan teknologi Python dan Streamlit yang dilengkapi visualisasi graf terintegrasi.
 
 ### 1.4 Manfaat
-* 
-*Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
+* *Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
