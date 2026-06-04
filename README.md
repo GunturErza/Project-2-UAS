@@ -17,4 +17,4 @@
 
 ## BAB 1: PENDAHULUAN
 ### 1.1 Latar Belakang
-Pemilihan tempat tinggal sementara (kost) bagi mahasiswa baru merupakan keputusan krusial yang mempengaruhi kenyamanan belajar dan efisiensi finansial. Faktor penentu seperti harga sewa dan jarak tempuh geografis menuju kampus sering kali bertentangan. Untuk mempermudah proses ini, diperlukan Decision Support System (DSS) yang mampu memodelkan relasi spasial jalanan dan entitas pendukung di sekitarnya. Struktur data Graph sangat ideal dalam merepresentasikan masalah ini karena mampu memetakan lokasi fisik sebagai titik simpul (node) dan rute jalan sebagai garis penghubung (edge).
+Pemilihan tempat tinggal atau kost bagi mahasiswa baru maupun mahasiswa aktif merupakan salah satu keputusan penting yang memengaruhi kenyamanan belajar dan efisiensi finansial. Seringkali mahasiswa menghadapi dilema dalam menyeimbangkan antara batasan anggaran (budget) bulanan dengan aksesibilitas lokasi, seperti jarak tempuh menuju kampus serta kedekatan dengan fasilitas penunjang (minimarket, tempat makan, atau laundry).
