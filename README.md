@@ -53,3 +53,15 @@ Algoritma Dijkstra adalah algoritma rakus (greedy algorithm) yang digunakan untu
 1. Menentukan nilai jarak awal ke semua simpul sebesar tak hingga ($\infty$), kecuali simpul awal yang diberi nilai $0$.
 2. Menyimpan simpul ke dalam antrean prioritas (priority queue / min-heap) berdasarkan bobot terkecil.
 3. Mengunjungi simpul tetangga yang belum dikunjungi, memperbarui nilai jaraknya jika jalur baru lebih pendek (relaxation), dan memasukkannya kembali ke antrean prioritas hingga simpul tujuan tercapai.
+
+   ---------------------------
+
+## BAB 3: ANALISIS DAN PERANCANGAN   
+### 3.1 Analisis Masalah
+Mahasiswa sering kesulitan menentukan kost karena informasi jarak ke kampus tidak linear dengan jalan pintas atau posisi fasilitas umum di sekitarnya. Oleh karena itu, entitas lingkungan sekitar kampus dipecah menjadi beberapa titik simpul dengan relasi antartitik yang memiliki bobot jarak tertentu.
+
+### 3.2 Desain Graph
+Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
+* *Struktur Node (Simpul):* Merepresentasikan lokasi. Memiliki atribut ID, Label, Tipe (Kampus, Kost, Fasilitas), dan Biaya sewa (khusus tipe Kost).
+* *Struktur Edge (Sisi):* Merepresentasikan akses jalan penghubung antarlokasi dengan atribut bobot berupa jarak dalam meter.
+
