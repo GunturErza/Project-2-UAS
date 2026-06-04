@@ -33,3 +33,8 @@ Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pen
 
 ### 1.4 Manfaat
 * *Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
+* *Bagi Pengembang:* Meningkatkan pemahaman teknis mengenai pemodelan data relasional, kalkulasi kompleksitas algoritma, dan visualisasi data berbasis network.
+  
+   ---------------------------
+
+## BAB 2: DASAR TEORI  
