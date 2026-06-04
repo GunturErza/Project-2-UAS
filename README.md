@@ -12,3 +12,9 @@
 3. I MADE BAGUS ABIYOGA PRAWIRA (2501010089)
 
    ---------------------------
+
+# LAPORAN PROJECT STRUKTUR DATA: IMPLEMENTASI GRAPH PADA DSS PEMILIHAN KOST
+
+## BAB 1: PENDAHULUAN
+### 1.1 Latar Belakang
+Pemilihan tempat tinggal sementara (kost) bagi mahasiswa baru merupakan keputusan krusial yang mempengaruhi kenyamanan belajar dan efisiensi finansial. Faktor penentu seperti harga sewa dan jarak tempuh geografis menuju kampus sering kali bertentangan. Untuk mempermudah proses ini, diperlukan Decision Support System (DSS) yang mampu memodelkan relasi spasial jalanan dan entitas pendukung di sekitarnya. Struktur data Graph sangat ideal dalam merepresentasikan masalah ini karena mampu memetakan lokasi fisik sebagai titik simpul (node) dan rute jalan sebagai garis penghubung (edge).
