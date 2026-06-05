@@ -2,7 +2,7 @@
 ## Semester Genap 2025/2026
 ## Mata Kuliah: Struktur Data
 ## Jenis Tugas: Project Kelompok
-## Tema: DSS ROUTE TOURING MOTOR BALI
+## Tema: DSS PEMILIHAN KOST UNTUK MAHASISWA
 
 ----------------------------------
 
@@ -11,7 +11,7 @@
 2. I KADEK GUNTUR ERZA PRAMUDYA (2501010071)
 3. I MADE BAGUS ABIYOGA PRAWIRA (2501010089)
 
-   ---------------------------
+----------------------------------
 
 # LAPORAN PROJECT STRUKTUR DATA: IMPLEMENTASI GRAPH PADA DSS PEMILIHAN KOST
 
@@ -22,9 +22,9 @@ Pemilihan tempat tinggal atau kost bagi mahasiswa baru maupun mahasiswa aktif me
 Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pendukung keputusan atau Decision Support System (DSS) yang tidak hanya memfilter data secara tabular, tetapi juga mampu memodelkan relasi spasial antar lokasi.   Struktur data Graph (Graf) merupakan model matematika yang sangat ideal untuk merepresentasikan entitas lokasi sebagai simpul (node/vertex) dan jalur penghubung beserta jaraknya sebagai sisi (edge). Dengan mengimplementasikan algoritma pencarian jalur terpendek seperti Dijkstra pada jaringan graf ini, sistem dapat memberikan rekomendasi kost terbaik yang sesuai dengan anggaran sekaligus mengoptimalkan rute perjalanan harian mahasiswa menuju kampus.
 
 ### 1.2 Rumusan Masalah
- 1. Bagaimana cara memodelkan data kost, fasilitas penunjang, dan kampus ke dalam struktur data Graph?
- 2. Bagaimana cara mengimplementasikan Algoritma Dijkstra dalam melakukan pencarian jalur terpendek dan optimasi keputusan pemilihan kost berdasarkan batas budget pengguna?
- 3. Bagaimana merancang interface aplikasi DSS yang interaktif untuk memvisualisasikan jaringan graf secara real-time?
+1. Bagaimana cara memodelkan data kost, fasilitas penunjang, dan kampus ke dalam struktur data Graph?
+2. Bagaimana cara mengimplementasikan Algoritma Dijkstra dalam melakukan pencarian jalur terpendek dan optimasi keputusan pemilihan kost berdasarkan batas budget pengguna?
+3. Bagaimana merancang interface aplikasi DSS yang interaktif untuk memvisualisasikan jaringan graf secara real-time?
 
 ### 1.3 Tujuan
 1. Memahami dan mengaplikasikan implementasi nyata dari struktur data graph dalam pemecahan masalah dunia nyata.
@@ -67,6 +67,7 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 
 ### 3.3 Flowchart Sistem
 <img width="1408" height="768" alt="WhatsApp Image 2026-06-05 at 11 22 02" src="https://github.com/user-attachments/assets/dd4c2550-cad1-44a1-9182-ec89ce74ba18" />
+
 ### 3.4 Use Case Diagram
 *Aktor:* Pengguna / Mahasiswa.
 
@@ -75,6 +76,9 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 2.  Memilih lokasi kost yang tersedia hasil filtrasi.
 3.  Melihat visualisasi jaringan graf penunjang rute.
 4.  Menerima rekomendasi hasil analisis keputusan rute terpendek dan urutan jalur lintasan.
+
+<img width="1380" height="752" alt="WhatsApp Image 2026-06-05 at 11 33 33" src="https://github.com/user-attachments/assets/4113d66a-aafd-483b-9b47-2a0ee0c6c4b8" />
+
 
 ### 3.5 Detail Struktur Node dan Edge pada Sistem
 Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian datanya:
@@ -86,12 +90,14 @@ Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian 
 5. FAC_1 (Label: Warmindo & Laundry, Tipe: Fasilitas)
 6. FAC_2 (Label: Minimarket, Tipe: Fasilitas)
 
-* 
-*Daftar Edge ($E$) dan Bobot Jarak:*
-* KOST_A ── FAC_1 : 200 meter
-* FAC_1 ── KAMPUS : 500 meter
-* KOST_B ── FAC_2 : 400 meter
-* FAC_2 ── KAMPUS : 600 meter
-* KOST_C ── FAC_1 : 300 meter
-* KOST_C ── FAC_2 : 350 meter
-* FAC_1 ── FAC_2 : 150 meter
+* *Daftar Edge ($E$) dan Bobot Jarak:*
+  
+1 KOST_A ── FAC_1 : 200 meter
+2 FAC_1 ── KAMPUS : 500 meter
+3 KOST_B ── FAC_2 : 400 meter
+4 FAC_2 ── KAMPUS : 600 meter
+5 KOST_C ── FAC_1 : 300 meter
+6 KOST_C ── FAC_2 : 350 meter
+7 FAC_1 ── FAC_2 : 150 meter
+
+
