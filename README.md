@@ -228,4 +228,21 @@ Pengujian dilakukan untuk membuktikan keakuratan sistem pendukung keputusan dala
 **Kekurangan:**
 * Data simpul graf dan harga masih bersifat statis di dalam kode (hardcoded), belum terhubung ke database eksternal formal.
 * Kriteria pencarian keputusan baru didasarkan pada dua parameter utama (Budget dan Jarak fisik), belum mengukur variabel eksternal seperti rating kenyamanan kost secara mendalam.
+
+## BAB 6: Saran dan Keimpulan
+### 6.1 Kesimpulan
+
+Proyek ini berhasil membuktikan bahwa teori struktur data *Graph* bukan sekadar materi konseptual akademis, melainkan dapat ditransformasikan secara nyata menjadi fondasi utama sistem pendukung keputusan (Decision Support System). Melalui perpaduan pemfilteran batasan data biaya dan eksekusi *Algoritma Dijkstra*, sistem terbukti akurat dalam mengevaluasi rute alternatif serta menyajikan rekomendasi kost dengan akumulasi bobot jarak terpendek menuju kampus utama.
+
+### 6.2 Saran Pengembangan
+
+Untuk meningkatkan nilai guna sistem di masa mendatang, beberapa poin pengembangan yang disarankan meliputi:
+
+1. *Integrasi Database Graf (Bonus Kriteria):* Mengganti penyimpanan lokal adjacency list dengan sistem database graf asli seperti Neo4j untuk mendukung skalabilitas ribuan data kost.
+
+
+2. *Visualisasi Real-Time Lanjutan:* Menggunakan pustaka Streamlit-AgGraph atau pyvis agar graf hasil visualisasi dapat digeser (drag), diperbesar (zoom in/out), dan diklik secara interaktif oleh pengguna langsung pada layar.
+
+
+3. *Metode Keputusan Hybrid:* Menambahkan algoritma pengambil keputusan multi-kriteria seperti AHP (Analytic Hierarchy Process) atau TOPSIS untuk menggabungkan bobot jarak, fasilitas AC/non-AC, dan rating kebersihan bersamaan dengan Algoritma Dijkstra.
 ---
