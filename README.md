@@ -4,14 +4,14 @@
 ## Jenis Tugas: Project Kelompok
 ## Tema: DSS PEMILIHAN KOST UNTUK MAHASISWA
 
-----------------------------------
+---
 
 ## NAMA ANGGOTA KELOMPOK
 1. I GEDE WIRA YOGA (2501010086)
 2. I KADEK GUNTUR ERZA PRAMUDYA (2501010071)
 3. I MADE BAGUS ABIYOGA PRAWIRA (2501010089)
 
-----------------------------------
+---
 
 # LAPORAN PROJECT STRUKTUR DATA: IMPLEMENTASI GRAPH PADA DSS PEMILIHAN KOST
 
@@ -35,7 +35,7 @@ Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pen
 * *Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
 * *Bagi Pengembang:* Meningkatkan pemahaman teknis mengenai pemodelan data relasional, kalkulasi kompleksitas algoritma, dan visualisasi data berbasis network.
   
-   ---------------------------
+---
 
 ## BAB 2: DASAR TEORI  
 ### 2.1 Struktur Data Graph
@@ -54,7 +54,7 @@ Algoritma Dijkstra adalah algoritma rakus (greedy algorithm) yang digunakan untu
 2. Menyimpan simpul ke dalam antrean prioritas (priority queue / min-heap) berdasarkan bobot terkecil.
 3. Mengunjungi simpul tetangga yang belum dikunjungi, memperbarui nilai jaraknya jika jalur baru lebih pendek (relaxation), dan memasukkannya kembali ke antrean prioritas hingga simpul tujuan tercapai.
 
-   ---------------------------
+---
 
 ## BAB 3: ANALISIS DAN PERANCANGAN   
 ### 3.1 Analisis Masalah
@@ -100,4 +100,77 @@ Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian 
 6 KOST_C ── FAC_2 : 350 meter
 7 FAC_1 ── FAC_2 : 150 meter
 
+---
 
+## BAB 4: IMPLEMENTASI
+## 4.1 Implementasi Program
+
+### 1. Perangkat Lunak & Library yang Digunakan
+* **Bahasa Pemrograman:** Python 3.x
+* **Framework Antarmuka:** `streamlit` (Menyediakan komponen GUI web interaktif)
+* **Pemodelan Struktur Data:** `networkx` (Digunakan untuk representasi struktur data Graph)
+* **Render Visualisasi:** `matplotlib` (Digunakan untuk menggambar plot grafik jaringan)
+* **Optimasi Algoritma:** `heapq` (Struktur data Priority Queue bawaan Python untuk mempercepat pencarian jalur terpendek)
+
+### 2. Dataset Lingkungan Jaringan (Graph)
+Sistem menginisialisasi sebuah jaringan lokasi di sekitar kampus yang terdiri dari 3 jenis simpul (*Nodes*):
+1. **Kampus:** Target akhir (`KAMPUS`)
+2. **Kost:** `KOST_A` (Rp 1.500.000), `KOST_B` (Rp 800.000), `KOST_C` (Rp 1.100.000)
+3. **Fasilitas Umum:** `FAC_1` (Warmindo & Laundry), `FAC_2` (Minimarket)
+
+Bobot antar-sisi (*Edges Weight*) merepresentasikan jarak fisik antar tempat dalam satuan **Meter**.
+
+## 4.2 Penjelasan Kode
+### A. Struktur Data Graph
+Class `DSSGraph` merepresentasikan peta wilayah menggunakan konsep *Adjacency List*.
+
+```python
+class DSSGraph:
+    def __init__(self):
+        self.graph = {}
+        self.node_info = {}
+
+    def add_node(self, node, label, node_type, cost=0):
+        self.graph[node] = {}
+        self.node_info[node] = {"label": label, "type": node_type, "cost": cost}
+
+    def add_edge(self, u, v, weight):
+        if u in self.graph and v in self.graph:
+            self.graph[u][v] = weight
+            self.graph[v][u] = weight
+```
+* add_node: Menyimpan simpul baru beserta meta-data seperti nama lokasi, tipe tempat, dan harga sewa.
+* add_edge: Menghubungkan dua simpul secara timbal balik (Undirected Graph) dengan beban jarak tertentu.
+
+### B. Algoritma Dijkstra (Pencarian Rute Terpendek)
+Fungsi ini melakukan komputasi pencarian rute terefisien dari titik kost asal menuju titik kampus.
+
+```python
+def dijkstra(self, start, end):
+    queue = [(0, start, [])]
+    visited = set()
+    
+    while queue:
+        (cost, node, path) = heapq.heappop(queue)
+        
+        if node not in visited:
+            visited.add(node)
+            path = path + [node]
+            
+            if node == end:
+                return cost, path
+            
+            for neighbor, weight in self.graph[node].items():
+                if neighbor not in visited:
+                    heapq.heappush(queue, (cost + weight, neighbor, path))
+                    
+    return float("inf"), []
+```
+* Menggunakan teknik Min-Heap (heapq.heappop) agar kompleksitas waktu pencarian tetap optimal dengan memprioritaskan akumulasi jarak terkecil pada setiap iterasi simpul.
+
+### C. Logika Filter Keputusan (Decision Support System)
+Sistem menyaring opsi kost secara real-time berdasarkan budget yang dimasukkan oleh pengguna di halaman web. 
+```python
+valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "Kost" and info["cost"] <= budget]
+```
+---
