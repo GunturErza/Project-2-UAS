@@ -92,27 +92,27 @@ Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian 
 
 * *Daftar Edge ($E$) dan Bobot Jarak:*
   
-1 KOST_A ── FAC_1 : 200 meter
-2 FAC_1 ── KAMPUS : 500 meter
-3 KOST_B ── FAC_2 : 400 meter
-4 FAC_2 ── KAMPUS : 600 meter
-5 KOST_C ── FAC_1 : 300 meter
-6 KOST_C ── FAC_2 : 350 meter
-7 FAC_1 ── FAC_2 : 150 meter
+1. KOST_A ── FAC_1 : 200 meter 
+2. FAC_1 ── KAMPUS : 500 meter 
+3. KOST_B ── FAC_2 : 400 meter 
+4. FAC_2 ── KAMPUS : 600 meter 
+5. KOST_C ── FAC_1 : 300 meter
+6. KOST_C ── FAC_2 : 350 meter 
+7. FAC_1 ── FAC_2 : 150 meter 
 
 ---
 
 ## BAB 4: IMPLEMENTASI
 ## 4.1 Implementasi Program
 
-### 1. Perangkat Lunak & Library yang Digunakan
+### 4.1.1 Perangkat Lunak & Library yang Digunakan
 * **Bahasa Pemrograman:** Python 3.x
 * **Framework Antarmuka:** `streamlit` (Menyediakan komponen GUI web interaktif)
 * **Pemodelan Struktur Data:** `networkx` (Digunakan untuk representasi struktur data Graph)
 * **Render Visualisasi:** `matplotlib` (Digunakan untuk menggambar plot grafik jaringan)
 * **Optimasi Algoritma:** `heapq` (Struktur data Priority Queue bawaan Python untuk mempercepat pencarian jalur terpendek)
 
-### 2. Dataset Lingkungan Jaringan (Graph)
+### 4.1.2 Dataset Lingkungan Jaringan (Graph)
 Sistem menginisialisasi sebuah jaringan lokasi di sekitar kampus yang terdiri dari 3 jenis simpul (*Nodes*):
 1. **Kampus:** Target akhir (`KAMPUS`)
 2. **Kost:** `KOST_A` (Rp 1.500.000), `KOST_B` (Rp 800.000), `KOST_C` (Rp 1.100.000)
@@ -121,7 +121,7 @@ Sistem menginisialisasi sebuah jaringan lokasi di sekitar kampus yang terdiri da
 Bobot antar-sisi (*Edges Weight*) merepresentasikan jarak fisik antar tempat dalam satuan **Meter**.
 
 ## 4.2 Penjelasan Kode
-### A. Struktur Data Graph
+### 4.2.1 Struktur Data Graph
 Class `DSSGraph` merepresentasikan peta wilayah menggunakan konsep *Adjacency List*.
 
 ```python
@@ -142,7 +142,7 @@ class DSSGraph:
 * add_node: Menyimpan simpul baru beserta meta-data seperti nama lokasi, tipe tempat, dan harga sewa.
 * add_edge: Menghubungkan dua simpul secara timbal balik (Undirected Graph) dengan beban jarak tertentu.
 
-### B. Algoritma Dijkstra (Pencarian Rute Terpendek)
+### 4.2.2 Algoritma Dijkstra (Pencarian Rute Terpendek)
 Fungsi ini melakukan komputasi pencarian rute terefisien dari titik kost asal menuju titik kampus.
 
 ```python
@@ -168,7 +168,7 @@ def dijkstra(self, start, end):
 ```
 * Menggunakan teknik Min-Heap (heapq.heappop) agar kompleksitas waktu pencarian tetap optimal dengan memprioritaskan akumulasi jarak terkecil pada setiap iterasi simpul.
 
-### C. Logika Filter Keputusan (Decision Support System)
+### 4.2.3 Logika Filter Keputusan (Decision Support System)
 Sistem menyaring opsi kost secara real-time berdasarkan budget yang dimasukkan oleh pengguna di halaman web. 
 ```python
 valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "Kost" and info["cost"] <= budget]
