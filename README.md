@@ -66,24 +66,7 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 * *Struktur Edge (Sisi):* Merepresentasikan akses jalan penghubung antarlokasi dengan atribut bobot berupa jarak dalam meter.
 
 ### 3.3 Flowchart Sistem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<img width="1408" height="768" alt="WhatsApp Image 2026-06-05 at 11 22 02" src="https://github.com/user-attachments/assets/dd4c2550-cad1-44a1-9182-ec89ce74ba18" />
 ### 3.4 Use Case Diagram
 *Aktor:* Pengguna / Mahasiswa.
 
