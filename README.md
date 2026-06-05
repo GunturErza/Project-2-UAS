@@ -169,8 +169,63 @@ def dijkstra(self, start, end):
 * Menggunakan teknik Min-Heap (heapq.heappop) agar kompleksitas waktu pencarian tetap optimal dengan memprioritaskan akumulasi jarak terkecil pada setiap iterasi simpul.
 
 ### 4.2.3 Logika Filter Keputusan (Decision Support System)
-Sistem menyaring opsi kost secara real-time berdasarkan budget yang dimasukkan oleh pengguna di halaman web. 
+Sistem menyaring opsi kost secara real-time berdasarkan budget yang dimasukkan oleh pengguna di halaman web.
 ```python
 valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "Kost" and info["cost"] <= budget]
 ```
+
+## 4.3 Tampilan Sistem
+<img width="1920" height="1041" alt="Capture" src="https://github.com/user-attachments/assets/ffbff446-2450-4b1a-b3bc-075fb7b10be8" />
+
+## BAB 5: Pengujian dan Analisis
+## 5.1 Skenario Pengujian
+Pengujian dilakukan untuk membuktikan keakuratan sistem pendukung keputusan dalam memfilter finansial dan menghitung jarak.
+
+  Kasus Uji 1: Budget Ketat (Rp 900.000)
+  Skenario: Pengguna menggeser slider ke angka Rp 900.000.
+  Hasil Filter: Hanya KOST_B (Kost Muslimah B, Rp 800.000) yang muncul di menu pilihan.
+
+
+  Eksekusi Dijkstra: KOST_B menuju KAMPUS.
+  Hasil Rekomendasi: Total Jarak = 1000 Meter.
+  Jalur: Kost Muslimah B ➡️ Minimarket ➡️ Kampus Utama.
+
+
+  Kasus Uji 2: Budget Menengah (Rp 1.200.000)
+  Skenario: Pengguna menggeser slider ke angka Rp 1.200.000.
+  Hasil Filter: Menampilkan KOST_B dan KOST_C (Rp 1.100.000).
+
+
+  Eksekusi Pilihan: Pengguna memilih KOST_C.
+  Hasil Rekomendasi: Total Jarak = 800 Meter.
+  Jalur: Kost Campur C ➡️ Warmindo & Laundry ➡️ Kampus Utama. (Catatan: Jalur alternatif lewat FAC_2 memiliki total jarak $350 + 600 = 950$ meter, sistem berhasil mendeteksi jalur lewat FAC_1 sepanjang 800 meter sebagai
+  yang terpendek).
+
+
+  Kasus Uji 3: Budget Terlalu Rendah (Rp 500.000)
+  Skenario: Pengguna menurunkan slider ke batas minimum Rp 500.000.
+  Hasil: Sistem memunculkan pesan peringatan kontekstual berwarna kuning: "Tidak ada kost yang memenuhi kriteria budget Anda...".
+
+## 5.2 Kompleksitas Algoritma
+### 5.2.1 Analisis Kompleksitas Algoritma
+
+**Kompleksitas Waktu (Time Complexity):** Menggunakan struktur Adjacency List dan Min-Heap Priority Queue, kompleksitas algoritma Dijkstra yang diimplementasikan adalah *$O((V + E) \log V)$*, di mana $V$ adalah jumlah simpul dan $E$ adalah jumlah sisi. Proses ini sangat cepat untuk ukuran graf skala lokal.
+
+**Kompleksitas Ruang (Space Complexity):** Kompleksitas ruang berukuran *$O(V + E)$* untuk menyimpan representasi data struktur graf dan status kunjungan array algoritma di dalam memori.
+
+
+
+### 5.2.2 Kelebihan dan Kekurangan Sistem
+
+**Kelebihan:** 
+* Interface interaktif, responsif, dan mudah digunakan langsung lewat web browser berkat framework Streamlit.
+* Visualisasi graf bersifat dinamis; jalur solusi rute yang terpilih otomatis berubah warna menjadi merah tebal sehingga intuitif bagi pengguna.
+* Menggunakan manajemen memori yang baik dengan fitur caching data (st.cache_resource).
+
+
+
+
+**Kekurangan:**
+* Data simpul graf dan harga masih bersifat statis di dalam kode (hardcoded), belum terhubung ke database eksternal formal.
+* Kriteria pencarian keputusan baru didasarkan pada dua parameter utama (Budget dan Jarak fisik), belum mengukur variabel eksternal seperti rating kenyamanan kost secara mendalam.
 ---
