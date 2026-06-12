@@ -178,8 +178,6 @@ Jarak fisik antarsimpul dalam satuan meter. Bobot ini menjadi variabel utama yan
 ## BAB 4: IMPLEMENTASI
 ## 4.1 Implementasi Program
 ### Perangkat Lunak & Library yang Digunakan
-# Daftar Perangkat Lunak dan Library - DSS Kost INSTIKI
-
 Berikut adalah daftar perangkat lunak dan library Python yang digunakan dalam pengembangan sistem pendukung keputusan (DSS) pemilihan kost:
 
 * **Python Interpreter**
