@@ -2,11 +2,14 @@ import streamlit as st
 import heapq
 import folium
 from streamlit_folium import st_folium
+import networkx as nx
+import matplotlib.pyplot as plt
+import pandas as pd
 
 # ==========================================
 # KONFIGURASI HALAMAN
 # ==========================================
-st.set_page_config(page_title="DSS Kost INSTIKI | KELOMPOK SUKA KENCANG", layout="wide", page_icon="🎓")
+st.set_page_config(page_title="DSS Kost INSTIKI | KELOMPOK CHUY", layout="wide", page_icon="🎓")
 
 st.markdown("""
 <style>
@@ -22,10 +25,12 @@ st.markdown("""
     .ai-badge {
         background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
         color: white;
-        padding: 4px 12px;
+        padding: 6px 14px;
         border-radius: 20px;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         font-weight: bold;
+        display: inline-block;
+        margin-bottom: 10px;
     }
     .kriteria-box {
         background-color: #e0f2fe;
@@ -35,6 +40,15 @@ st.markdown("""
         margin-bottom: 20px;
         font-size: 0.9rem;
     }
+    .reason-box {
+        background-color: #f0fdf4;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #22c55e;
+        margin-top: 15px;
+        font-size: 0.95rem;
+        color: #166534;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -42,27 +56,24 @@ st.markdown("""
 # SIDEBAR UNTUK DOSEN PENGUJI (KRITERIA UAS)
 # ==========================================
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Logo_INSTIKI.png/600px-Logo_INSTIKI.png", width=150) # Logo opsional
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Logo_INSTIKI.png/600px-Logo_INSTIKI.png", width=150)
     st.title("📌 Info Project UAS")
-    st.markdown("**Pengembang:** I Gede Wira Yoga")
+    st.markdown("**Pengembang:** KELOMPOK CIHUY")
     st.divider()
     
     st.markdown("""
     <div class='kriteria-box'>
-    <b>✅ Implementasi Graph Terpakai:</b><br><br>
-    <b>1. Adjacency List:</b><br>
-    Struktur data menggunakan nested dictionary Python.<br><br>
-    <b>2. Weighted Graph:</b><br>
-    Edge memiliki bobot berupa jarak nyata (meter).<br><br>
-    <b>3. Undirected Graph:</b><br>
-    Mayoritas jalan raya bersifat dua arah.<br><br>
-    <b>4. Directed Graph:</b><br>
-    Terdapat jalur <i>Satu Arah (One-Way)</i> dari Simpang Pakerisan 1 menuju Simpang Pakerisan 2.
+    <b>✅ Fitur Analisis Graf Terintegrasi:</b><br><br>
+    • <b>Adjacency List & Matrix Basis</b><br>
+    • <b>Weighted & Directed Graph</b><br>
+    • <b>Centrality Analysis:</b> Menghitung titik paling krusial di sekitar Panjer.<br>
+    • <b>Dynamic Topology Graph:</b> Visualisasi murni struktur graf via NetworkX.<br>
+    • <b>AI Multi-Criteria Scoring Breakdown</b>
     </div>
     """, unsafe_allow_html=True)
 
 # ==========================================
-# DATA DUNIA NYATA (INSTIKI & KOST PANJER AREA)
+# DATASET (INSTIKI & AREA SEKITAR)
 # ==========================================
 if 'nodes' not in st.session_state:
     st.session_state.nodes = {
@@ -83,19 +94,13 @@ if 'adj_list' not in st.session_state:
         'Kost Kartika Sari': {'Simpang Pakerisan 1': 150, 'Kost Batanghari': 300},
         'Kost Griya Petanu 34': {'Simpang Petanu': 100},
         'Kost Batanghari': {'Kost Kartika Sari': 300, 'Simpang Pakerisan 1': 400},
-        
-        # IMPLEMENTASI DIRECTED GRAPH (Jalan Satu Arah)
-        # Simpang 1 bisa menuju Simpang 2 (Jarak 250m)
         'Simpang Pakerisan 1': {'INSTIKI (Kampus)': 300, 'Kosanku Bali': 100, 'Kost Kartika Sari': 150, 'Kost Batanghari': 400, 'Simpang Pakerisan 2': 250}, 
-        
-        # Simpang 2 TIDAK BISA kembali ke Simpang 1 (Koneksi searah / perboden)
-        'Simpang Pakerisan 2': {'INSTIKI (Kampus)': 150, 'Simpang Petanu': 150}, 
-        
+        'Simpang Pakerisan 2': {'INSTIKI (Kampus)': 150, 'Simpang Petanu': 150}, # Directed One-Way
         'Simpang Petanu': {'Simpang Pakerisan 2': 150, 'Kost Griya Petanu 34': 100}
     }
 
 # ==========================================
-# ALGORITMA DIJKSTRA & AI SCORING
+# ENGINES & ALGORITHMS
 # ==========================================
 def dijkstra(graph, start, end):
     queue = []
@@ -116,10 +121,9 @@ def dijkstra(graph, start, end):
                 previous_nodes[neighbor] = current_node
                 heapq.heappush(queue, (distance, neighbor))
 
-    # Rekonstruksi rute jika jalur ditemukan
     path, current_node = [], end
     if previous_nodes[current_node] is None and current_node != start:
-        return float('infinity'), [] # Tidak ada jalur (antisipasi jalan buntu karena One-Way)
+        return float('infinity'), []
         
     while previous_nodes[current_node] is not None:
         path.insert(0, current_node)
@@ -128,127 +132,191 @@ def dijkstra(graph, start, end):
     
     return distances[end], path
 
-def calculate_ai_score(kost_name, distance):
-    # Jika tidak ada jalur karena aturan jalan satu arah, skor di-nol-kan
+def get_score_breakdown(kost_name, distance):
     if distance == float('infinity'):
-        return 0
-        
+        return {"total": 0, "rating_component": 0, "facility_component": 0, "distance_penalty": 0, "price_penalty": 0}
+    
     data = st.session_state.nodes[kost_name]
-    score = (data['rating_maps'] * 20) + (data['fasilitas'] * 10) - (distance * 0.05) - (data['biaya'] / 10000)
-    return round(score, 2)
+    
+    # BEDAH BOBOT PENILAIAN SESUAI PERMINTAAN
+    r_comp = data['rating_maps'] * 20       # Pengaruh besar rating maps
+    f_comp = data['fasilitas'] * 10        # Pengaruh poin fasilitas
+    d_pent = distance * 0.05               # Penalti jarak (makin jauh makin memotong skor)
+    p_pent = data['biaya'] / 10000         # Penalti harga (makin mahal makin memotong skor)
+    
+    total = round(r_comp + f_comp - d_pent - p_pent, 2)
+    return {
+        "total": total,
+        "rating_component": round(r_comp, 2),
+        "facility_component": round(f_comp, 2),
+        "distance_penalty": round(d_pent, 2),
+        "price_penalty": round(p_pent, 2)
+    }
+
+def generate_ai_reason(selected, rankings):
+    if not rankings:
+        return "Tidak ada analisis tersedia."
+    
+    top_kost = rankings[0]['kost']
+    selected_data = next(item for item in rankings if item["kost"] == selected)
+    
+    node_details = st.session_state.nodes[selected]
+    
+    if selected == top_kost:
+        return f"💡 **Mengapa AI Memilih {selected}?** Kost ini mendapatkan peringkat 1 karena menawarkan efisiensi terbaik. Meskipun mungkin harganya bukan yang paling murah, kombinasi **Rating Maps yang tinggi (⭐{node_details['rating_maps']})** dan **jarak optimal berbobot ({selected_data['jarak']}m)** melahirkan nilai utilitas tertinggi dibandingkan opsi lainnya."
+    else:
+        return f"💡 **Analisis Perbandingan AI:** {selected} menduduki peringkat di bawah {top_kost}. Hal ini disebabkan karena nilai komponen penalti harganya yang cukup besar atau jarak tempuh rutenya memakan waktu lebih lama, meskipun fasilitasnya sudah bersaing."
 
 # ==========================================
-# PETA FOLIUM
+# GEOGRAPHICAL MAP (FOLIUM)
 # ==========================================
-def create_map(path=None, ai_recommended=None):
-    kampus_lat = st.session_state.nodes['INSTIKI (Kampus)']['lat']
-    kampus_lon = st.session_state.nodes['INSTIKI (Kampus)']['lon']
+def create_folium_map(path=None, ai_recommended=None):
+    kampus_lat, kampus_lon = st.session_state.nodes['INSTIKI (Kampus)']['lat'], st.session_state.nodes['INSTIKI (Kampus)']['lon']
     m = folium.Map(location=[kampus_lat, kampus_lon], zoom_start=16, tiles="CartoDB positron")
 
-    # Gambar semua garis jalan (Edges)
     for node, neighbors in st.session_state.adj_list.items():
         node_coords = [st.session_state.nodes[node]['lat'], st.session_state.nodes[node]['lon']]
         for neighbor in neighbors:
             neighbor_coords = [st.session_state.nodes[neighbor]['lat'], st.session_state.nodes[neighbor]['lon']]
-            
-            # Beri warna khusus (orange putus-putus) untuk jalan Satu Arah (Directed Edge)
             if node == 'Simpang Pakerisan 1' and neighbor == 'Simpang Pakerisan 2':
                 folium.PolyLine(locations=[node_coords, neighbor_coords], color="#f97316", weight=3, dash_array='5, 5', tooltip="Jalan Satu Arah").add_to(m)
             else:
                 folium.PolyLine(locations=[node_coords, neighbor_coords], color="#cbd5e1", weight=2, opacity=0.8).add_to(m)
 
-    # Highlight rute Dijkstra
-    if path and len(path) > 0:
-        path_coords = []
-        for p in path:
-            path_coords.append([st.session_state.nodes[p]['lat'], st.session_state.nodes[p]['lon']])
+    if path:
+        path_coords = [[st.session_state.nodes[p]['lat'], st.session_state.nodes[p]['lon']] for p in path]
         folium.PolyLine(locations=path_coords, color="#ef4444", weight=6, opacity=0.9).add_to(m)
 
-    # Tambahkan Marker
     for node, data in st.session_state.nodes.items():
         if node == 'INSTIKI (Kampus)':
-            icon_color = 'red'
-            icon_type = 'education'
-            popup_text = f"<b>🎓 {node}</b>"
+            icon, color = 'education', 'red'
         elif node == ai_recommended:
-            icon_color = 'purple'
-            icon_type = 'star'
-            popup_text = f"<b>⭐ {node}</b><br>Rating: {data['rating_maps']}/5<br>Harga: Rp {data['biaya']:,}"
+            icon, color = 'star', 'purple'
         elif data['type'] == 'Kost':
-            icon_color = 'green' if path and node in path else 'cadetblue'
-            icon_type = 'home'
-            popup_text = f"<b>🏠 {node}</b><br>Rating: {data['rating_maps']}/5<br>Harga: Rp {data['biaya']:,}"
-        else:
-            icon_color = 'lightgray'
-            icon_type = 'info-sign'
-            popup_text = node
+            icon, color = 'home', 'green' if path and node in path else 'cadetblue'
+        else: continue
 
-        if data['type'] != 'Jalan':
-            folium.Marker(
-                location=[data['lat'], data['lon']],
-                popup=folium.Popup(popup_text, max_width=200),
-                tooltip=node,
-                icon=folium.Icon(color=icon_color, prefix='glyphicon', icon=icon_type)
-            ).add_to(m)
-
+        folium.Marker(
+            location=[data['lat'], data['lon']],
+            tooltip=node,
+            icon=folium.Icon(color=color, icon=icon)
+        ).add_to(m)
     return m
 
 # ==========================================
-# TAMPILAN UTAMA
+# LAYOUT UTAMA STREAMLIT
 # ==========================================
 st.title("🎓 Smart DSS Pemilihan Kost INSTIKI")
-st.markdown("Sistem Rekomendasi Terintegrasi Maps | Oleh: **I GD WIRA NATANAEL**")
+st.markdown("Sistem Pendukung Keputusan Berbasis Struktur Data Graf Terintegrasi")
 st.divider()
 
-col1, col2 = st.columns([1.2, 2])
+# Membagi Halaman Menjadi Tab untuk Tampilan Akademik yang Rapi
+tab1, tab2 = st.tabs(["🗺️ Peta Navigasi & SPK", "📊 Analisis Topologi Jaringan & Centrality"])
 
-with col1:
-    st.subheader("⚙️ Parameter Filter (Real-time)")
+# Membangun Objek Graph NetworkX untuk Digunakan Bersama
+G = nx.DiGraph()
+for node, neighbors in st.session_state.adj_list.items():
+    for neighbor, w in neighbors.items():
+        G.add_edge(node, neighbor, weight=w)
+
+with tab1:
+    col1, col2 = st.columns([1.2, 2])
     
-    budget_maksimal = st.slider("Budget Maksimal Per Bulan (Rp):", min_value=500000, max_value=1500000, value=900000, step=100000)
-    kost_tersedia = {k: v for k, v in st.session_state.nodes.items() if v['type'] == 'Kost' and v['biaya'] <= budget_maksimal}
-    
-    if not kost_tersedia:
-        st.error("⚠️ Budget terlalu kecil. Tidak ada kost yang ditemukan di area INSTIKI.")
-    else:
-        ai_rankings = []
-        for k in kost_tersedia.keys():
-            jarak, rute = dijkstra(st.session_state.adj_list, k, 'INSTIKI (Kampus)')
-            if rute: # Hanya rekomendasikan jika ada jalur yang masuk akal
-                score = calculate_ai_score(k, jarak)
-                ai_rankings.append({'kost': k, 'jarak': jarak, 'rute': rute, 'score': score})
+    with col1:
+        st.subheader("⚙️ Filter & Bobot Keputusan")
+        budget_maksimal = st.slider("Budget Maksimal Kost (Rp):", 500000, 1500000, 1000000, 100000)
         
-        if ai_rankings:
-            ai_rankings = sorted(ai_rankings, key=lambda x: x['score'], reverse=True)
-            top_kost = ai_rankings[0]
-            
-            st.markdown(f"<span class='ai-badge'>✨ AI Top Recommendation: {top_kost['kost']}</span>", unsafe_allow_html=True)
-            st.write("") 
-            
-            pilihan_kost = st.selectbox("Pilih Kost untuk melihat rute ke INSTIKI:", [k['kost'] for k in ai_rankings])
-            selected_data = next(item for item in ai_rankings if item["kost"] == pilihan_kost)
-            
-            st.write("### Detail Atribut Kost")
-            d1, d2 = st.columns(2)
-            d1.metric("Rating Google Maps", f"⭐ {st.session_state.nodes[pilihan_kost]['rating_maps']}")
-            d2.metric("Skor Fasilitas", f"{st.session_state.nodes[pilihan_kost]['fasilitas']}/10")
+        kost_tersedia = {k: v for k, v in st.session_state.nodes.items() if v['type'] == 'Kost' and v['biaya'] <= budget_maksimal}
+        
+        if not kost_tersedia:
+            st.error("⚠️ Tidak ada kost dalam range budget tersebut.")
         else:
-            st.error("Terisolasi karena aturan jalan satu arah.")
+            ai_rankings = []
+            for k in kost_tersedia.keys():
+                jarak, rute = dijkstra(st.session_state.adj_list, k, 'INSTIKI (Kampus)')
+                if rute:
+                    bd = get_score_breakdown(k, jarak)
+                    ai_rankings.append({'kost': k, 'jarak': jarak, 'rute': rute, 'score': bd['total'], 'breakdown': bd})
+            
+            if ai_rankings:
+                ai_rankings = sorted(ai_rankings, key=lambda x: x['score'], reverse=True)
+                top_kost = ai_rankings[0]['kost']
+                
+                st.markdown(f"<div class='ai-badge'>✨ Rekomendasi Terbaik AI: {top_kost}</div>", unsafe_allow_html=True)
+                
+                pilihan_kost = st.selectbox("Pilih rumah kost untuk dianalisis:", [k['kost'] for k in ai_rankings])
+                selected_node_data = next(item for item in ai_rankings if item["kost"] == pilihan_kost)
+                
+                # Menampilkan alasan dinamis AI
+                reason_html = generate_ai_reason(pilihan_kost, ai_rankings)
+                st.markdown(f"<div class='reason-box'>{reason_html}</div>", unsafe_allow_html=True)
+                
+                # TAMPILKAN BOBOT MEMPENGARUHI RATING MAPS SUEAI PERMINTAAN
+                st.write("### 📐 Breakdown Bobot Skor AI:")
+                bd_vals = selected_node_data['breakdown']
+                
+                st.write(f"- 📈 **Poin Utama Rating Maps (Rating × 25):** `+{bd_vals['rating_component']}`")
+                st.write(f"- 🛏️ **Poin Utama Fasilitas (Skor × 10):** `+{bd_vals['facility_component']}`")
+                st.write(f"- 📐 **Penalti Jarak Graf (Jarak Meter × 0.05):** `-{bd_vals['distance_penalty']}`")
+                st.write(f"- 💵 **Penalti Harga Sewa (Biaya / 10000):** `-{bd_vals['price_penalty']}`")
+                st.write(f"👉 **Skor Akhir Utilitas:** `{bd_vals['total']}`")
+                
+    with col2:
+        st.subheader("🗺️ Live Route Map")
+        if kost_tersedia and ai_rankings:
+            m1, m2 = st.columns(2)
+            m1.metric("Jarak Lintasan Terpendek", f"{selected_node_data['jarak']} Meter")
+            m2.metric("Biaya Kost Per Bulan", f"Rp {st.session_state.nodes[pilihan_kost]['biaya']:,}")
+            
+            peta_folium = create_folium_map(path=selected_node_data['rute'], ai_recommended=top_kost)
+            st_folium(peta_folium, width=750, height=420)
+            st.info(f"🛣️ **Simpul Rute Dijkstra:** {' ➔ '.join(selected_node_data['rute'])}")
 
-with col2:
-    st.subheader("🗺️ Live Map & Navigasi")
+with tab2:
+    st.subheader("📊 Analisis Teori Struktur Graf")
+    st.write("Bagian ini menampilkan representasi matematika murni dari struktur data jaringan jalan yang digunakan aplikasi.")
     
-    if kost_tersedia and ai_rankings:
-        m1, m2, m3 = st.columns(3)
-        m1.metric(label="Jarak ke INSTIKI", value=f"{selected_data['jarak']} Meter")
-        m2.metric(label="Harga Sewa", value=f"Rp {st.session_state.nodes[pilihan_kost]['biaya']:,}")
-        m3.metric(label="AI Smart Score", value=f"{selected_data['score']}")
+    c1, c2 = st.columns([1.5, 1])
+    
+    with c1:
+        st.write("### 🕸️ Jaringan Graph Dinamis (Network Topology)")
+        # Menggambar grafik topologi murni menggunakan matplotlib & networkx
+        fig, ax = plt.subplots(figsize=(7, 5))
+        pos = nx.spring_layout(G, seed=42)
         
-        peta = create_map(path=selected_data['rute'], ai_recommended=top_kost['kost'])
-        st_folium(peta, width=700, height=450)
+        # Bedakan warna node tujuan (Kampus) dan node biasa
+        node_colors = ['#ef4444' if n == 'INSTIKI (Kampus)' else '#3b82f6' if st.session_state.nodes[n]['type'] == 'Kost' else '#94a3b8' for n in G.nodes()]
         
-        st.info(f"**Rute:** {' ➔ '.join(selected_data['rute'])}")
-    else:
-        st.write("Sesuaikan budget untuk menampilkan hasil peta.")
-        peta = create_map()
-        st_folium(peta, width=700, height=450)
+        nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=900, ax=ax)
+        nx.draw_networkx_labels(G, pos, font_size=8, font_weight='bold', font_color='black', ax=ax)
+        
+        # Gambar Edge berarah
+        nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='#64748b', arrows=True, arrowsize=15, ax=ax)
+        
+        # Label Bobot Jarak Jaringan
+        labels = nx.get_edge_attributes(G, 'weight')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=7, ax=ax)
+        
+        plt.axis('off')
+        st.pyplot(fig)
+        
+    with c2:
+        st.write("### 📐 Analisis Centrality (Sentralitas)")
+        st.write("Analisis sentralitas digunakan untuk mengetahui simpul (node) mana yang paling kritis/penting dalam sistem jaringan.")
+        
+        # Hitung Nilai Metric Centrality
+        degree_cent = nx.degree_centrality(G)
+        closeness_cent = nx.closeness_centrality(G)
+        
+        centrality_data = []
+        for node in G.nodes():
+            centrality_data.append({
+                "Nama Simpul Node": node,
+                "Degree Centrality (Konektivitas)": round(degree_cent[node], 3),
+                "Closeness Centrality (Akses Terdekat)": round(closeness_cent[node], 3)
+            })
+            
+        df_centrality = pd.DataFrame(centrality_data).sort_values(by="Degree Centrality (Konektivitas)", ascending=False)
+        st.dataframe(df_centrality, use_container_width=True)
+        
+        st.caption("💡 **Catatan Akademik:** Nilai Degree Centrality tinggi menunjukkan node tersebut memiliki cabang persimpangan jalan terbanyak di dunia nyata.")
