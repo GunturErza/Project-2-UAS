@@ -66,18 +66,23 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 * *Struktur Edge (Sisi):* Merepresentasikan akses jalan penghubung antarlokasi dengan atribut bobot berupa jarak dalam meter.
 
 ### 3.3 Flowchart Sistem
-<img width="1408" height="768" alt="WhatsApp Image 2026-06-05 at 11 22 02" src="https://github.com/user-attachments/assets/dd4c2550-cad1-44a1-9182-ec89ce74ba18" />
+<img width="1380" height="752" alt="Flowchart" src="https://github.com/user-attachments/assets/33f1d318-abf7-4e27-99f7-48cad48eac0b" />
+
 
 ### 3.4 Use Case Diagram
 *Aktor:* Pengguna / Mahasiswa.
 
 * Aktivitas:
-1.  Mengatur filter budget bulanan kost.
-2.  Memilih lokasi kost yang tersedia hasil filtrasi.
-3.  Melihat visualisasi jaringan graf penunjang rute.
-4.  Menerima rekomendasi hasil analisis keputusan rute terpendek dan urutan jalur lintasan.
+1. Melihat Informasi Proyek UAS (Melalui Sidebar).
+2. Menentukan Filter Budget Kost (Menggunakan slider input).
+3. Melihat Rekomendasi Kost Terbaik AI (Hasil kalkulasi utilitas tertinggi).
+4. Memilih Kost untuk Dianalisis (Melalui dropdown selectbox).
+5. Melihat Analisis Breakdown Skor AI (Rincian bobot rating, fasilitas, penalti jarak, dan harga).
+6. Melihat Rute Terpendek & Live Route Map (Integrasi peta Folium dan algoritma Dijkstra).
+7. Melihat Analisis Teori Struktur Graf (Topologi Jaringan NetworkX & Tabel Analisis Sentralitas).
 
-<img width="1380" height="752" alt="WhatsApp Image 2026-06-05 at 11 33 33" src="https://github.com/user-attachments/assets/4113d66a-aafd-483b-9b47-2a0ee0c6c4b8" />
+<img width="1408" height="768" alt="UseCase" src="https://github.com/user-attachments/assets/46f0f3a3-5655-45be-9288-1857d1825eb2" />
+
 
 
 ### 3.5 Detail Struktur Node dan Edge pada Sistem
