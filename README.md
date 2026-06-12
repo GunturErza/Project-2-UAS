@@ -173,11 +173,30 @@ Dari Simpang Petanu menuju ke:
 ## 4.1 Implementasi Program
 
 ### 4.1.1 Perangkat Lunak & Library yang Digunakan
-* **Bahasa Pemrograman:** Python 3.x
-* **Framework Antarmuka:** `streamlit` (Menyediakan komponen GUI web interaktif)
-* **Pemodelan Struktur Data:** `networkx` (Digunakan untuk representasi struktur data Graph)
-* **Render Visualisasi:** `matplotlib` (Digunakan untuk menggambar plot grafik jaringan)
-* **Optimasi Algoritma:** `heapq` (Struktur data Priority Queue bawaan Python untuk mempercepat pencarian jalur terpendek)
+# Daftar Perangkat Lunak dan Library - DSS Kost INSTIKI
+
+Berikut adalah daftar perangkat lunak dan library Python yang digunakan dalam pengembangan sistem pendukung keputusan (DSS) pemilihan kost:
+
+* **Python Interpreter**
+  Bahasa pemrograman utama untuk menjalankan algoritma Dijkstra dan seluruh logika sistem.
+* **Web Browser**
+  Media antarmuka (User Interface) untuk menampilkan aplikasi web interaktif.
+* **Code Editor (VS Code / PyCharm)**
+  Perangkat lunak untuk menulis dan menyunting kode program.
+* **Streamlit**
+  Framework utama untuk membangun antarmuka web dan komponen interaktif seperti slider, selectbox, dan tab.
+* **Folium**
+  Library untuk membuat peta geografis interaktif berbasis koordinat bumi asli.
+* **Streamlit-Folium**
+  Pustaka integrator untuk menampilkan peta Folium di dalam halaman web Streamlit dengan lancar.
+* **NetworkX**
+  Library matematika graf untuk memodelkan topologi jalan berarah serta menghitung metrik sentralitas (Degree & Closeness Centrality).
+* **Heapq**
+  Library bawaan Python untuk mengoptimalkan performa kecepatan pencarian rute terpendek pada algoritma Dijkstra.
+* **Matplotlib**
+  Library visualisasi untuk menggambar struktur jaringan graf abstrak yang berisi simpul, garis, dan label jarak.
+* **Pandas**
+  Library pengolah data untuk menyusun, mengurutkan, dan menampilkan hasil analisis sentralitas dalam bentuk tabel (DataFrame).
 
 ### 4.1.2 Dataset Lingkungan Jaringan (Graph)
 Sistem menginisialisasi sebuah jaringan lokasi di sekitar kampus yang terdiri dari 3 jenis simpul (*Nodes*):
