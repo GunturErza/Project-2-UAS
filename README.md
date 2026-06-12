@@ -86,86 +86,102 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 ### 3.5 Detail Struktur Node dan Edge pada Sistem
 Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian datanya:
 
-* *Daftar Node ($V$):*
+# Struktur Data Graf - DSS Pemilihan Kost INSTIKI
 
-A. Kategori Kampus (Tujuan Utama)
-INSTIKI (Kampus)
+Dokumentasi ini memuat struktur **Node (Simpul)** dan **Edge (Sisi)** berdasarkan basis data *Adjacency List* yang digunakan dalam sistem pendukung keputusan.
+
+---
+
+## 1. Struktur Node
+
+### **INSTIKI (Kampus)**
 Tipe: Tujuan
-Koordinat: -8.681600 (Lat), 115.227100 (Lon)
-Atribut: Rating Maps 5.0, Fasilitas 10, Biaya Rp 0
+Koordinat: Lat -8.681600, Lon 115.227100
+Atribut: Biaya Rp 0, Rating Maps 5.0, Fasilitas 10
 
-B. Kategori Rumah Kost
-Kosanku Bali
+### **Kosanku Bali**
 Tipe: Kost
-Koordinat: -8.680000 (Lat), 115.226500 (Lon)
-Atribut: Biaya Rp 800.000/bulan, Rating Maps 4.3, Fasilitas 7
+Koordinat: Lat -8.680000, Lon 115.226500
+Atribut: Biaya Rp 800.000, Rating Maps 4.3, Fasilitas 7
 
-Kost Kartika Sari
+### **Kost Kartika Sari**
 Tipe: Kost
-Koordinat: -8.678200 (Lat), 115.226000 (Lon)
-Atribut: Biaya Rp 900.000/bulan, Rating Maps 4.5, Fasilitas 8
+Koordinat: Lat -8.678200, Lon 115.226000
+Atribut: Biaya Rp 900.000, Rating Maps 4.5, Fasilitas 8
 
-Kost Griya Petanu 34
+### **Kost Griya Petanu 34**
 Tipe: Kost
-Koordinat: -8.685000 (Lat), 115.229000 (Lon)
-Atribut: Biaya Rp 1.000.000/bulan, Rating Maps 4.7, Fasilitas 9
+Koordinat: Lat -8.685000, Lon 115.229000
+Atribut: Biaya Rp 1.000.000, Rating Maps 4.7, Fasilitas 9
 
-Kost Batanghari
+### **Kost Batanghari**
 Tipe: Kost
-Koordinat: -8.676000 (Lat), 115.224000 (Lon)
-Atribut: Biaya Rp 1.200.000/bulan, Rating Maps 4.8, Fasilitas 9
+Koordinat: Lat -8.676000, Lon 115.224000
+Atribut: Biaya Rp 1.200.000, Rating Maps 4.8, Fasilitas 9
 
-C. Kategori Persimpangan / Jalan
-Simpang Pakerisan 1
+### **Simpang Pakerisan 1**
 Tipe: Jalan
-Koordinat: -8.679000 (Lat), 115.226200 (Lon)
+Koordinat: Lat -8.679000, Lon 115.226200
 Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 
-Simpang Pakerisan 2
+### **Simpang Pakerisan 2**
 Tipe: Jalan
-Koordinat: -8.683000 (Lat), 115.227500 (Lon)
+Koordinat: Lat -8.683000, Lon 115.227500
 Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 
-Simpang Petanu
+### **Simpang Petanu**
 Tipe: Jalan
-Koordinat: -8.684000 (Lat), 115.228500 (Lon)
+Koordinat: Lat -8.684000, Lon 115.228500
 Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 
-* *Daftar Edge ($E$) dan Bobot Jarak:*
-  
-Dari INSTIKI (Kampus) menuju ke:
-➔ Kosanku Bali (Jarak: 200 meter)
-➔ Simpang Pakerisan 2 (Jarak: 150 meter)
-➔ Simpang Pakerisan 1 (Jarak: 300 meter)
+---
 
-Dari Kosanku Bali menuju ke:
-➔ INSTIKI (Kampus) (Jarak: 200 meter)
-➔ Simpang Pakerisan 1 (Jarak: 100 meter)
+## 2. Struktur Edge
 
-Dari Kost Kartika Sari menuju ke:
-➔ Simpang Pakerisan 1 (Jarak: 150 meter)
-➔ Kost Batanghari (Jarak: 300 meter)
+### **Asal: INSTIKI (Kampus)**
+* Ke Kosanku Bali (Jarak: 200m)
+* Ke Simpang Pakerisan 2 (Jarak: 150m)
+* Ke Simpang Pakerisan 1 (Jarak: 300m)
 
-Dari Kost Griya Petanu 34 menuju ke:
-➔ Simpang Petanu (Jarak: 100 meter)
-Dari Kost Batanghari menuju ke:
-➔ Kost Kartika Sari (Jarak: 300 meter)
-➔ Simpang Pakerisan 1 (Jarak: 400 meter)
+### **Asal: Kosanku Bali**
+* Ke INSTIKI (Kampus) (Jarak: 200m)
+* Ke Simpang Pakerisan 1 (Jarak: 100m)
 
-Dari Simpang Pakerisan 1 menuju ke:
-➔ INSTIKI (Kampus) (Jarak: 300 meter)
-➔ Kosanku Bali (Jarak: 100 meter)
-➔ Kost Kartika Sari (Jarak: 150 meter)
-➔ Kost Batanghari (Jarak: 400 meter)
-➔ Simpang Pakerisan 2 (Jarak: 250 meter)
+### **Asal: Kost Kartika Sari**
+* Ke Simpang Pakerisan 1 (Jarak: 150m)
+* Ke Kost Batanghari (Jarak: 300m)
 
-Dari Simpang Pakerisan 2 menuju ke:
-➔ INSTIKI (Kampus) (Jarak: 150 meter)
-➔ Simpang Petanu (Jarak: 150 meter) (Catatan khusus: Jalan searah)
+### **Asal: Kost Griya Petanu 34**
+* Ke Simpang Petanu (Jarak: 100m)
 
-Dari Simpang Petanu menuju ke:
-➔ Simpang Pakerisan 2 (Jarak: 150 meter)
-➔ Kost Griya Petanu 34 (Jarak: 100 meter)
+### **Asal: Kost Batanghari**
+* Ke Kost Kartika Sari (Jarak: 300m)
+* Ke Simpang Pakerisan 1 (Jarak: 400m)
+
+### **Asal: Simpang Pakerisan 1**
+* Ke INSTIKI (Kampus) (Jarak: 300m)
+* Ke Kosanku Bali (Jarak: 100m)
+* Ke Kost Kartika Sari (Jarak: 150m)
+* Ke Kost Batanghari (Jarak: 400m)
+* Ke Simpang Pakerisan 2 (Jarak: 250m)
+
+### **Asal: Simpang Pakerisan 2**
+* Ke INSTIKI (Kampus) (Jarak: 150m)
+* Ke Simpang Petanu (Jarak: 150m)
+
+### **Asal: Simpang Petanu**
+* Ke Simpang Pakerisan 2 (Jarak: 150m)
+* Ke Kost Griya Petanu 34 (Jarak: 100m)
+
+---
+
+## 3. Spesifikasi Pemodelan Graf
+
+### **Tipe Graf**
+Directed Graph (Graf Berarah). Aliran perpindahan dari satu titik ke titik lain memiliki arah spesifik yang memengaruhi penentuan jalur pulang dan pergi.
+
+### **Bobot (Weight)**
+Jarak fisik antarsimpul dalam satuan meter. Bobot ini menjadi variabel utama yang diakumulasikan oleh algoritma Dijkstra untuk menentukan rute terpendek menuju Kampus INSTIKI.
 
 ---
 
