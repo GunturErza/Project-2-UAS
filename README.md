@@ -29,9 +29,9 @@ Untuk mengatasi masalah tersebut, diperlukan sebuah Sistem Pendukung Keputusan (
 3. Bagaimana merancang formula penilaian (*Scoring Engine*) yang adil untuk menyatukan berbagai variabel dengan dimensi satuan yang berbeda (harga jutaan rupiah, jarak ratusan meter, dan rating skala kecil) tanpa saling mendominasi?
 
 ### 1.3 Tujuan
-1. Memahami dan mengaplikasikan implementasi nyata dari struktur data graph dalam pemecahan masalah dunia nyata.
-2. Mengimplementasikan Algoritma Dijkstra untuk menghitung akumulasi bobot terkecil (jarak terpendek) pada DSS Pemilihan Kost.
-3. Membangun aplikasi DSS interaktif menggunakan teknologi Python dan Streamlit yang dilengkapi visualisasi graf terintegrasi.
+1. Mengembangkan model graf hibrida (*directed* dan *undirected graph*) yang akurat untuk merepresentasikan peta jalanan di sekitar wilayah Panjer menuju kampus INSTIKI.
+2. Membangun fungsi pencarian lintasan terpendek menggunakan Algoritma Dijkstra berbasis *Min-Heap* dengan tingkat kompleksitas waktu yang optimal yaitu $\mathcal{O}((V + E) \log V)$.
+3. Menyediakan aplikasi web interaktif menggunakan framework Streamlit yang berfungsi sebagai alat bantu pengambilan keputusan bagi mahasiswa dalam memilih kost berdasarkan preferensi personal.
 
 ### 1.4 Manfaat
 * *Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
