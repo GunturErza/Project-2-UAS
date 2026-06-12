@@ -86,12 +86,6 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 ### 3.5 Detail Struktur Node dan Edge pada Sistem
 Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian datanya:
 
-# Struktur Data Graf - DSS Pemilihan Kost INSTIKI
-
-Dokumentasi ini memuat struktur **Node (Simpul)** dan **Edge (Sisi)** berdasarkan basis data *Adjacency List* yang digunakan dalam sistem pendukung keputusan.
-
----
-
 ## 1. Struktur Node
 
 ### **INSTIKI (Kampus)**
@@ -134,8 +128,6 @@ Tipe: Jalan
 Koordinat: Lat -8.684000, Lon 115.228500
 Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 
----
-
 ## 2. Struktur Edge
 
 ### **Asal: INSTIKI (Kampus)**
@@ -172,8 +164,6 @@ Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 ### **Asal: Simpang Petanu**
 * Ke Simpang Pakerisan 2 (Jarak: 150m)
 * Ke Kost Griya Petanu 34 (Jarak: 100m)
-
----
 
 ## 3. Spesifikasi Pemodelan Graf
 
