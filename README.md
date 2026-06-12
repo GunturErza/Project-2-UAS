@@ -204,61 +204,77 @@ Berikut adalah daftar perangkat lunak dan library Python yang digunakan dalam pe
 * **Pandas**
   Library pengolah data untuk menyusun, mengurutkan, dan menampilkan hasil analisis sentralitas dalam bentuk tabel (DataFrame).
 
-### 4.1.2 Dataset Lingkungan Jaringan (Graph)
-Sistem menginisialisasi sebuah jaringan lokasi di sekitar kampus yang terdiri dari 3 jenis simpul (*Nodes*):
-1. **Kampus:** Target akhir (`KAMPUS`)
-2. **Kost:** `KOST_A` (Rp 1.500.000), `KOST_B` (Rp 800.000), `KOST_C` (Rp 1.100.000)
-3. **Fasilitas Umum:** `FAC_1` (Warmindo & Laundry), `FAC_2` (Minimarket)
-
-Bobot antar-sisi (*Edges Weight*) merepresentasikan jarak fisik antar tempat dalam satuan **Meter**.
-
 ## 4.2 Penjelasan Kode
-### 4.2.1 Struktur Data Graph
-Class `DSSGraph` merepresentasikan peta wilayah menggunakan konsep *Adjacency List*.
+### Inisialisasi Dataset & Struktur Data Graf
+Sistem menyimpan data lokasi (*spatial*) dan keterhubungan antar-jalan menggunakan konsep *State Management* dari Streamlit yang diintegrasikan ke dalam struktur data dictionary (*Adjacency List*).
 
 ```python
-class DSSGraph:
-    def __init__(self):
-        self.graph = {}
-        self.node_info = {}
+if 'nodes' not in st.session_state:
+    st.session_state.nodes = {
+        'INSTIKI (Kampus)': {'type': 'Tujuan', 'biaya': 0, 'rating_maps': 5.0, 'fasilitas': 10, 'lat': -8.681600, 'lon': 115.227100},
+        'Kosanku Bali': {'type': 'Kost', 'biaya': 800000, 'rating_maps': 4.3, 'fasilitas': 7, 'lat': -8.680000, 'lon': 115.226500},
+        'Kost Kartika Sari': {'type': 'Kost', 'biaya': 900000, 'rating_maps': 4.5, 'fasilitas': 8, 'lat': -8.678200, 'lon': 115.226000},
+        'Kost Griya Petanu 34': {'type': 'Kost', 'biaya': 1000000, 'rating_maps': 4.7, 'fasilitas': 9, 'lat': -8.685000, 'lon': 115.229000},
+        'Kost Batanghari': {'type': 'Kost', 'biaya': 1200000, 'rating_maps': 4.8, 'fasilitas': 9, 'lat': -8.676000, 'lon': 115.224000},
+        'Simpang Pakerisan 1': {'type': 'Jalan', 'biaya': 0, 'rating_maps': 0, 'fasilitas': 0, 'lat': -8.679000, 'lon': 115.226200},
+        'Simpang Pakerisan 2': {'type': 'Jalan', 'biaya': 0, 'rating_maps': 0, 'fasilitas': 0, 'lat': -8.683000, 'lon': 115.227500},
+        'Simpang Petanu': {'type': 'Jalan', 'biaya': 0, 'rating_maps': 0, 'fasilitas': 0, 'lat': -8.684000, 'lon': 115.228500}
+    }
 
-    def add_node(self, node, label, node_type, cost=0):
-        self.graph[node] = {}
-        self.node_info[node] = {"label": label, "type": node_type, "cost": cost}
-
-    def add_edge(self, u, v, weight):
-        if u in self.graph and v in self.graph:
-            self.graph[u][v] = weight
-            self.graph[v][u] = weight
+if 'adj_list' not in st.session_state:
+    st.session_state.adj_list = {
+        'INSTIKI (Kampus)': {'Kosanku Bali': 200, 'Simpang Pakerisan 2': 150, 'Simpang Pakerisan 1': 300},
+        'Kosanku Bali': {'INSTIKI (Kampus)': 200, 'Simpang Pakerisan 1': 100},
+        'Kost Kartika Sari': {'Simpang Pakerisan 1': 150, 'Kost Batanghari': 300},
+        'Kost Griya Petanu 34': {'Simpang Petanu': 100},
+        'Kost Batanghari': {'Kost Kartika Sari': 300, 'Simpang Pakerisan 1': 400},
+        'Simpang Pakerisan 1': {'INSTIKI (Kampus)': 300, 'Kosanku Bali': 100, 'Kost Kartika Sari': 150, 'Kost Batanghari': 400, 'Simpang Pakerisan 2': 250}, 
+        'Simpang Pakerisan 2': {'INSTIKI (Kampus)': 150, 'Simpang Petanu': 150},
+        'Simpang Petanu': {'Simpang Pakerisan 2': 150, 'Kost Griya Petanu 34': 100}
+    }
 ```
-* add_node: Menyimpan simpul baru beserta meta-data seperti nama lokasi, tipe tempat, dan harga sewa.
-* add_edge: Menghubungkan dua simpul secara timbal balik (Undirected Graph) dengan beban jarak tertentu.
+* st.session_state.nodes: Menyimpan metadata spasial simpul seperti tipe lokasi, biaya sewa, rating Google Maps, jumlah fasilitas, serta titik koordinat lintang (latitude) dan bujur (longitude).
 
-### 4.2.2 Algoritma Dijkstra (Pencarian Rute Terpendek)
+* st.session_state.adj_list: Berperan sebagai matriks ketetanggaan graf berarah (Weighted Directed Graph), di mana nama simpul luar memetakan simpul tetangga beserta bobot jaraknya dalam satuan meter.
+
+### 4.3 Algoritma Dijkstra (Pencarian Rute Terpendek)
 Fungsi ini melakukan komputasi pencarian rute terefisien dari titik kost asal menuju titik kampus.
 
 ```python
-def dijkstra(self, start, end):
-    queue = [(0, start, [])]
-    visited = set()
-    
+def dijkstra(graph, start, end):
+    queue = []
+    heapq.heappush(queue, (0, start))
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+    previous_nodes = {node: None for node in graph}
+
     while queue:
-        (cost, node, path) = heapq.heappop(queue)
+        current_distance, current_node = heapq.heappop(queue)
+        if current_node == end: break
+        if current_distance > distances[current_node]: continue
+
+        for neighbor, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous_nodes[neighbor] = current_node
+                heapq.heappush(queue, (distance, neighbor))
+
+    path, current_node = [], end
+    if previous_nodes[current_node] is None and current_node != start:
+        return float('infinity'), []
         
-        if node not in visited:
-            visited.add(node)
-            path = path + [node]
-            
-            if node == end:
-                return cost, path
-            
-            for neighbor, weight in self.graph[node].items():
-                if neighbor not in visited:
-                    heapq.heappush(queue, (cost + weight, neighbor, path))
-                    
-    return float("inf"), []
+    while previous_nodes[current_node] is not None:
+        path.insert(0, current_node)
+        current_node = previous_nodes[current_node]
+    if path: path.insert(0, start)
+    
+    return distances[end], path
 ```
-* Menggunakan teknik Min-Heap (heapq.heappop) agar kompleksitas waktu pencarian tetap optimal dengan memprioritaskan akumulasi jarak terkecil pada setiap iterasi simpul.
+
+* Min-Heap Optimization (heapq): Struktur antrean prioritas digunakan agar simpul dengan akumulasi jarak terkecil senantiasa diproses terlebih dahulu, mereduksi kompleksitas waktu berjalan menjadi O((V+E)logV).
+
+* Backtracking Path: Menggunakan struktur data pencatatan simpul asal previous_nodes untuk menyusun kembali urutan jalan yang dilewati secara runut dari titik kost awal hingga tiba di gerbang kampus target.
 
 ### 4.2.3 Logika Filter Keputusan (Decision Support System)
 Sistem menyaring opsi kost secara real-time berdasarkan budget yang dimasukkan oleh pengguna di halaman web.
@@ -267,7 +283,8 @@ valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "K
 ```
 
 ## 4.3 Tampilan Sistem
-<img width="1920" height="1041" alt="Capture" src="https://github.com/user-attachments/assets/ffbff446-2450-4b1a-b3bc-075fb7b10be8" />
+<img width="1600" height="850" alt="WhatsApp Image 2026-06-12 at 13 43 47" src="https://github.com/user-attachments/assets/ce01eedf-ab3e-4f4f-b94f-1d1802ec571c" />
+
 
 ## BAB 5: Pengujian dan Analisis
 ## Skenario Pengujian:
@@ -306,27 +323,52 @@ valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "K
   * **Metrik Konektivitas:** Node `Simpang Pakerisan 1` berhasil divalidasi oleh sistem sebagai titik paling krusial dengan nilai **Degree Centrality tertinggi (0.714)**, membuktikan secara matematika bahwa simpul tersebut adalah persimpangan jalan terpadat/memiliki cabang terbanyak di sekitar area Panjer.
 
 ## 5.2 Kompleksitas Algoritma
-### Analisis Kompleksitas Algoritma
 
-**Kompleksitas Waktu (Time Complexity):** Menggunakan struktur Adjacency List dan Min-Heap Priority Queue, kompleksitas algoritma Dijkstra yang diimplementasikan adalah *$O((V + E) \log V)$*, di mana $V$ adalah jumlah simpul dan $E$ adalah jumlah sisi. Proses ini sangat cepat untuk ukuran graf skala lokal.
+## 🛠️ Analisis Kompleksitas Algoritma
 
-**Kompleksitas Ruang (Space Complexity):** Kompleksitas ruang berukuran *$O(V + E)$* untuk menyimpan representasi data struktur graf dan status kunjungan array algoritma di dalam memori.
+Aplikasi ini menggunakan dua komponen komputasi utama: **Algoritma Dijkstra** untuk pencarian rute terpendek dan **Metrik Sentralitas NetworkX** untuk analisis topologi jaringan.
+
+### 1. Algoritma Dijkstra (Pencarian Rute)
+Kode mengimplementasikan Dijkstra menggunakan *Priority Queue* berbasis Min-Heap via pustaka `heapq`.
+
+* **Kompleksitas Waktu (Time Complexity):** $$O((V + E) \log V)$$
+  * *Penjelasan:* Di mana $V$ adalah jumlah simpul (node/persimpangan) dan $E$ adalah jumlah sisi (edge/jalan). Operasi `heappop` dan `heappush` membutuhkan waktu $O(\log V)$, yang dieksekusi untuk setiap simpul dan tetangganya. Ini adalah pendekatan yang sangat efisien untuk graf berukuran kecil hingga menengah.
+* **Kompleksitas Ruang (Space Complexity):** $O(V + E)$
+  * *Penjelasan:* Memori digunakan untuk menyimpan struktur data `distances`, `previous_nodes`, dan elemen di dalam heap yang berbanding lurus dengan jumlah simpul dan jalur yang terdaftar.
+
+### 2. Analisis Sentralitas (Tab 2)
+Fungsi `nx.degree_centrality(G)` dan `nx.closeness_centrality(G)` memiliki beban komputasi yang berbeda:
+* **Degree Centrality:** $O(V)$ karena hanya menghitung jumlah *edge* yang terhubung langsung pada tiap *node*.
+* **Closeness Centrality:** $O(V \times E)$ karena sistem harus menghitung jarak terpendek dari *setiap* simpul ke *seluruh* simpul lainnya dalam graf (menggunakan algoritma *All-Pairs Shortest Path*).
 
 
+## Kelebihan Sistem (Pros)
 
-### 5.3 Kelebihan dan Kekurangan Sistem
+1. **Efisiensi Manajemen State (`st.session_state`)**
+   Struktur data graf disimpan di dalam *session state* Streamlit. Hal ini mencegah aplikasi melakukan inisialisasi ulang (*re-rendering*) dataset graf yang sama setiap kali pengguna menggeser slider atau mengubah pilihan menu, sehingga performa aplikasi tetap instan.
 
-**Kelebihan:** 
-* Interface interaktif, responsif, dan mudah digunakan langsung lewat web browser berkat framework Streamlit.
-* Visualisasi graf bersifat dinamis; jalur solusi rute yang terpilih otomatis berubah warna menjadi merah tebal sehingga intuitif bagi pengguna.
-* Menggunakan manajemen memori yang baik dengan fitur caching data (st.cache_resource).
+2. **Skor Utilitas Dinamis & Komprehensif**
+   Sistem Pendukung Keputusan (SPK) tidak hanya terpaku pada satu parameter (seperti harga saja atau jarak saja). Formula multi-kriteria berhasil menyeimbangkan parameter positif (rating, fasilitas) dan parameter negatif (penalti biaya dan penalti jarak geografis) untuk menghasilkan rekomendasi yang rasional.
+
+3. **Kepatuhan Terhadap Aturan Graf Berarah (*Directed Graph*)**
+   Kode mampu menangani jalan satu arah (misalnya, dari `Simpang Pakerisan 2` ke `Simpang Petanu`). Ini membuktikan bahwa pemodelan graf mendekati kondisi lalu lintas dunia nyata, bukan sekadar garis lurus antar koordinat (*Euclidean distance*).
+
+4. **Visualisasi Interaktif Dua Sisi**
+   Aplikasi menyajikan visualisasi yang kaya: sisi praktis/aplikatif menggunakan peta spasial bumi asli (**Folium**) dan sisi akademis/teoretis menggunakan peta topologi struktur data murni (**NetworkX** & **Matplotlib**).
 
 
+## Kekurangan Sistem & Potensi Pengembangan (Cons)
 
+1. **Dataset Masih Bersifat Statis (*Hardcoded*)**
+   Data simpul (*nodes*) dan keterhubungan jalan (*adj_list*) ditulis langsung di dalam kode. Jika ada perubahan harga kost, penambahan jalan baru, atau penutupan jalan, kode sumber harus diubah secara manual.
+   * *Solusi ke depan:* Integrasikan dengan database eksternal (seperti PostgreSQL/MySQL) atau gunakan API eksternal seperti OpenStreetMap (OSM) untuk data jalan yang dinamis.
 
-**Kekurangan:**
-* Data simpul graf dan harga masih bersifat statis di dalam kode (hardcoded), belum terhubung ke database eksternal formal.
-* Kriteria pencarian keputusan baru didasarkan pada dua parameter utama (Budget dan Jarak fisik), belum mengukur variabel eksternal seperti rating kenyamanan kost secara mendalam.
+2. **Keterbatasan Skala Peta Folium**
+   Fungsi `create_folium_map` merender seluruh jaringan jalan setiap kali dipanggil. Jika jumlah *nodes* berkembang menjadi ribuan, proses rendering pada browser pengguna dapat mengalami penurunan performa (*lag*).
+
+3. **Formula Pembobotan (Scoring) Bersifat Kaku**
+   Konstanta pengali pada rumus utilitas (seperti `distance * 0.05` atau `biaya / 10000`) ditanam secara permanen (*hardcoded*). Padahal, preferensi setiap mahasiswa berbeda; ada mahasiswa yang tidak masalah berjalan jauh asalkan kost murah, dan sebaliknya.
+   * *Solusi ke depan:* Implementasikan metode SPK formal seperti **AHP (Analytic Hierarchy Process)** atau **TOPSIS**, di mana pengguna bisa menentukan sendiri bobot prioritas (kepentingan) antara harga, jarak, dan fasilitas secara dinamis melalui UI.
 
 ## BAB 6: Saran dan Keimpulan
 ### 6.1 Kesimpulan
@@ -337,11 +379,35 @@ Proyek ini berhasil membuktikan bahwa teori struktur data *Graph* bukan sekadar 
 
 Untuk meningkatkan nilai guna sistem di masa mendatang, beberapa poin pengembangan yang disarankan meliputi:
 
-1. *Integrasi Database Graf (Bonus Kriteria):* Mengganti penyimpanan lokal adjacency list dengan sistem database graf asli seperti Neo4j untuk mendukung skalabilitas ribuan data kost.
 
+## 1. Integrasi Database Dinamis & Back-Office Admin
+* **Kondisi Saat Ini:** Data kost dan jaringan jalan masih bersifat statis (*hardcoded*) di dalam `st.session_state`.
+* **Saran Pengembangan:** * Mengintegrasikan sistem dengan database relasional seperti **PostgreSQL** atau **MySQL**.
+  * Membangun halaman *Dashboard Admin* khusus. Fitur ini memungkinkan pemilik kost untuk mendaftarkan atau memperbarui data harga sewa, foto, dan fasilitas secara mandiri tanpa perlu mengubah kode sumber aplikasi.
 
-2. *Visualisasi Real-Time Lanjutan:* Menggunakan pustaka Streamlit-AgGraph atau pyvis agar graf hasil visualisasi dapat digeser (drag), diperbesar (zoom in/out), dan diklik secara interaktif oleh pengguna langsung pada layar.
+## 2. Implementasi Metode SPK Formal (AHP / TOPSIS)
+* **Kondisi Saat Ini:** Rumus pembobotan utilitas AI masih menggunakan konstanta kaku (*hardcoded multipliers*), sehingga preferensi bersifat seragam untuk semua pengguna.
+* **Saran Pengembangan:**
+  * Menerapkan metode **AHP (Analytic Hierarchy Process)** untuk menentukan bobot kriteria secara objektif melalui kuesioner berpasangan.
+  * Menggunakan metode **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)** untuk meranking kost berdasarkan jarak terdekat dari solusi ideal positif (harga paling murah, fasilitas paling lengkap) dan jarak terjauh dari solusi ideal negatif.
+  * Menambahkan slider interaktif di UI agar mahasiswa dapat menentukan sendiri prioritas mereka (misal: mengutamakan harga murah vs mengutamakan jarak dekat).
 
+## 3. Pemanfaatan API OpenStreetMap (OSM) & Jaringan Jalan Riil
+* **Kondisi Saat Ini:** Graf jalan dibuat secara manual menggunakan koordinat buatan yang disederhanakan.
+* **Saran Pengembangan:**
+  * Memanfaatkan pustaka **OSMnx** untuk mengunduh data graf jaringan jalan asli di sekitar wilayah Panjer, Denpasar secara langsung dari OpenStreetMap.
+  * Dengan integrasi ini, pencarian rute terpendek tidak lagi terbatas pada simpul buatan, melainkan mencakup seluruh gang dan jalan riil yang dapat dilalui oleh kendaraan roda dua maupun roda empat.
 
-3. *Metode Keputusan Hybrid:* Menambahkan algoritma pengambil keputusan multi-kriteria seperti AHP (Analytic Hierarchy Process) atau TOPSIS untuk menggabungkan bobot jarak, fasilitas AC/non-AC, dan rating kebersihan bersamaan dengan Algoritma Dijkstra.
+## 4. Sistem Login & Personalisasi Mahasiswa (Autentikasi)
+* **Kondisi Saat Ini:** Aplikasi dapat diakses secara anonim dan tidak menyimpan riwayat pencarian.
+* **Saran Pengembangan:**
+  * Menambahkan fitur autentikasi pengguna (*Login/Register*) menggunakan **Firebase Auth** atau **Supabase**.
+  * Fitur ini memungkinkan mahasiswa untuk menyimpan kost favorit (*bookmark*), memberikan rating/ulasan riil berbasis komunitas, serta mendapatkan rekomendasi yang dipersonalisasi berdasarkan program studi atau lokasi aktivitas harian di kampus.
+
+## 5. Live Tracking & Navigasi Berbasis GPS
+* **Kondisi Saat Ini:** Peta hanya bersifat statis menampilkan rute dari titik *A* ke titik *B*.
+* **Saran Pengembangan:**
+  * Menggunakan API Geolokasi HTML5 untuk mendeteksi koordinat GPS *real-time* dari perangkat pengguna.
+  * Sistem dapat memandu mahasiswa bergerak dari posisi mereka saat ini (*Current Location*) menuju lokasi kost target dengan indikator navigasi yang bergerak secara dinamis di atas peta Folium.
+
 ---
