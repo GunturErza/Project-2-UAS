@@ -85,23 +85,87 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 
 ### 3.5 Detail Struktur Node dan Edge pada Sistem
 Sesuai dengan basis data yang tertanam (hardcoded) pada sistem, berikut rincian datanya:
+
 * *Daftar Node ($V$):*
-1. KAMPUS (Label: Kampus Utama, Tipe: Kampus)
-2. KOST_A (Label: Kost Exclusif A, Tipe: Kost, Harga: Rp 1.500.000)
-3. KOST_B (Label: Kost Muslimah B, Tipe: Kost, Harga: Rp 800.000)
-4. KOST_C (Label: Kost Campur C, Tipe: Kost, Harga: Rp 1.100.000)
-5. FAC_1 (Label: Warmindo & Laundry, Tipe: Fasilitas)
-6. FAC_2 (Label: Minimarket, Tipe: Fasilitas)
+
+A. Kategori Kampus (Tujuan Utama)
+INSTIKI (Kampus)
+Tipe: Tujuan
+Koordinat: -8.681600 (Lat), 115.227100 (Lon)
+Atribut: Rating Maps 5.0, Fasilitas 10, Biaya Rp 0
+
+B. Kategori Rumah Kost
+Kosanku Bali
+Tipe: Kost
+Koordinat: -8.680000 (Lat), 115.226500 (Lon)
+Atribut: Biaya Rp 800.000/bulan, Rating Maps 4.3, Fasilitas 7
+
+Kost Kartika Sari
+Tipe: Kost
+Koordinat: -8.678200 (Lat), 115.226000 (Lon)
+Atribut: Biaya Rp 900.000/bulan, Rating Maps 4.5, Fasilitas 8
+
+Kost Griya Petanu 34
+Tipe: Kost
+Koordinat: -8.685000 (Lat), 115.229000 (Lon)
+Atribut: Biaya Rp 1.000.000/bulan, Rating Maps 4.7, Fasilitas 9
+
+Kost Batanghari
+Tipe: Kost
+Koordinat: -8.676000 (Lat), 115.224000 (Lon)
+Atribut: Biaya Rp 1.200.000/bulan, Rating Maps 4.8, Fasilitas 9
+
+C. Kategori Persimpangan / Jalan
+Simpang Pakerisan 1
+Tipe: Jalan
+Koordinat: -8.679000 (Lat), 115.226200 (Lon)
+Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
+
+Simpang Pakerisan 2
+Tipe: Jalan
+Koordinat: -8.683000 (Lat), 115.227500 (Lon)
+Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
+
+Simpang Petanu
+Tipe: Jalan
+Koordinat: -8.684000 (Lat), 115.228500 (Lon)
+Atribut: Biaya Rp 0, Rating Maps 0, Fasilitas 0
 
 * *Daftar Edge ($E$) dan Bobot Jarak:*
   
-1. KOST_A ── FAC_1 : 200 meter 
-2. FAC_1 ── KAMPUS : 500 meter 
-3. KOST_B ── FAC_2 : 400 meter 
-4. FAC_2 ── KAMPUS : 600 meter 
-5. KOST_C ── FAC_1 : 300 meter
-6. KOST_C ── FAC_2 : 350 meter 
-7. FAC_1 ── FAC_2 : 150 meter 
+Dari INSTIKI (Kampus) menuju ke:
+➔ Kosanku Bali (Jarak: 200 meter)
+➔ Simpang Pakerisan 2 (Jarak: 150 meter)
+➔ Simpang Pakerisan 1 (Jarak: 300 meter)
+
+Dari Kosanku Bali menuju ke:
+➔ INSTIKI (Kampus) (Jarak: 200 meter)
+➔ Simpang Pakerisan 1 (Jarak: 100 meter)
+
+Dari Kost Kartika Sari menuju ke:
+➔ Simpang Pakerisan 1 (Jarak: 150 meter)
+➔ Kost Batanghari (Jarak: 300 meter)
+
+Dari Kost Griya Petanu 34 menuju ke:
+➔ Simpang Petanu (Jarak: 100 meter)
+Dari Kost Batanghari menuju ke:
+➔ Kost Kartika Sari (Jarak: 300 meter)
+➔ Simpang Pakerisan 1 (Jarak: 400 meter)
+
+Dari Simpang Pakerisan 1 menuju ke:
+➔ INSTIKI (Kampus) (Jarak: 300 meter)
+➔ Kosanku Bali (Jarak: 100 meter)
+➔ Kost Kartika Sari (Jarak: 150 meter)
+➔ Kost Batanghari (Jarak: 400 meter)
+➔ Simpang Pakerisan 2 (Jarak: 250 meter)
+
+Dari Simpang Pakerisan 2 menuju ke:
+➔ INSTIKI (Kampus) (Jarak: 150 meter)
+➔ Simpang Petanu (Jarak: 150 meter) (Catatan khusus: Jalan searah)
+
+Dari Simpang Petanu menuju ke:
+➔ Simpang Pakerisan 2 (Jarak: 150 meter)
+➔ Kost Griya Petanu 34 (Jarak: 100 meter)
 
 ---
 
