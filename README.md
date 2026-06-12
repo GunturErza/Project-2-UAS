@@ -270,36 +270,43 @@ valid_kost = [node for node, info in dss.node_info.items() if info["type"] == "K
 <img width="1920" height="1041" alt="Capture" src="https://github.com/user-attachments/assets/ffbff446-2450-4b1a-b3bc-075fb7b10be8" />
 
 ## BAB 5: Pengujian dan Analisis
-## 5.1 Skenario Pengujian
-Pengujian dilakukan untuk membuktikan keakuratan sistem pendukung keputusan dalam memfilter finansial dan menghitung jarak.
+## Skenario Pengujian:
 
-  Kasus Uji 1: Budget Ketat (Rp 900.000)
-  Skenario: Pengguna menggeser slider ke angka Rp 900.000.
-  Hasil Filter: Hanya KOST_B (Kost Muslimah B, Rp 800.000) yang muncul di menu pilihan.
-
-
-  Eksekusi Dijkstra: KOST_B menuju KAMPUS.
-  Hasil Rekomendasi: Total Jarak = 1000 Meter.
-  Jalur: Kost Muslimah B ➡️ Minimarket ➡️ Kampus Utama.
-
-
-  Kasus Uji 2: Budget Menengah (Rp 1.200.000)
-  Skenario: Pengguna menggeser slider ke angka Rp 1.200.000.
-  Hasil Filter: Menampilkan KOST_B dan KOST_C (Rp 1.100.000).
+### 📌 Kasus Uji 1: Budget Ketat (Rp 900.000)
+* **Skenario:** Pengguna menggeser slider budget maksimal ke angka **Rp 900.000**.
+* **Hasil Filter Finansial:** Sistem berhasil memfilter dataset. Hanya properti dengan harga sewa $\le \text{Rp } 900.000$ yang muncul di menu pilihan, yaitu:
+  * `Kosanku Bali` (Rp 800.000)
+  * `Kost Kartika Sari` (Rp 900.000)
+* **Eksekusi Dijkstra (Sampel: Kosanku Bali menuju INSTIKI):**
+  * **Total Jarak:** 200 Meter.
+  * **Analisis Jalur Lintasan:** `Kosanku Bali ➔ INSTIKI (Kampus)`.
+* **Kalkulasi Skor Utilitas AI:** Sistem berhasil menghitung skor akurat sebesar **66.0** (Rating tinggi memitigasi penalti harga).
 
 
-  Eksekusi Pilihan: Pengguna memilih KOST_C.
-  Hasil Rekomendasi: Total Jarak = 800 Meter.
-  Jalur: Kost Campur C ➡️ Warmindo & Laundry ➡️ Kampus Utama. (Catatan: Jalur alternatif lewat FAC_2 memiliki total jarak $350 + 600 = 950$ meter, sistem berhasil mendeteksi jalur lewat FAC_1 sepanjang 800 meter sebagai
-  yang terpendek).
+### 📌 Kasus Uji 2: Budget Menengah (Rp 1.200.000)
+* **Skenario:** Pengguna menggeser slider budget maksimal ke angka **Rp 1.200.000**.
+* **Hasil Filter Finansial:** Sistem membuka akses ke lebih banyak pilihan kost yang masuk dalam *range* anggaran: `Kosanku Bali`, `Kost Kartika Sari`, `Kost Griya Petanu 34`, dan `Kost Batanghari`.
+* **Eksekusi Dijkstra (Sampel Kasus Khusus: Kost Griya Petanu 34 menuju INSTIKI):**
+  * **Total Jarak:** 400 Meter.
+  * **Analisis Jalur Lintasan:** `Kost Griya Petanu 34 ➔ Simpang Petanu ➔ Simpang Pakerisan 2 ➔ INSTIKI (Kampus)`.
+  * **Catatan Validasi Graf Berarah:** Jalur murni dunia nyata sebenarnya bisa memotong lewat *Simpang Pakerisan 1*, namun karena aturan graf satu arah (*directed edge*) pada `Simpang Pakerisan 2 ➔ Simpang Petanu`, sistem berhasil mendeteksi rute memutar yang valid dan aman secara aturan lalu lintas sepanjang 400 meter.
 
 
-  Kasus Uji 3: Budget Terlalu Rendah (Rp 500.000)
-  Skenario: Pengguna menurunkan slider ke batas minimum Rp 500.000.
-  Hasil: Sistem memunculkan pesan peringatan kontekstual berwarna kuning: "Tidak ada kost yang memenuhi kriteria budget Anda...".
+### 📌 Kasus Uji 3: Budget Terlalu Rendah (Rp 500.000)
+* **Skenario:** Pengguna menurunkan slider ke batas minimum absolut yaitu **Rp 500.000**.
+* **Hasil Ekspektasi Sistem:** Karena tidak ada properti kost di dalam database `st.session_state.nodes` yang memiliki harga sewa di bawah Rp 800.000, sistem langsung menghentikan kalkulasi Dijkstra untuk mencegah *crash*.
+* **Output Antarmuka UI:** Sistem memunculkan pesan peringatan kontekstual (kotak alert merah): 
+  > ⚠️ Tidak ada kost dalam range budget tersebut.
+
+
+### 📌 Kasus Uji 4: Validasi Tab Analisis Topologi & Sentralitas
+* **Skenario:** Pengguna membuka **Tab 2: Analisis Topologi Jaringan & Centrality**.
+* **Hasil Matriks Teori Graf:**
+  * **Visualisasi Jaringan:** Matplotlib dan NetworkX berhasil merender simpul `INSTIKI (Kampus)` dengan warna merah pembeda (`#ef4444`).
+  * **Metrik Konektivitas:** Node `Simpang Pakerisan 1` berhasil divalidasi oleh sistem sebagai titik paling krusial dengan nilai **Degree Centrality tertinggi (0.714)**, membuktikan secara matematika bahwa simpul tersebut adalah persimpangan jalan terpadat/memiliki cabang terbanyak di sekitar area Panjer.
 
 ## 5.2 Kompleksitas Algoritma
-### 5.2.1 Analisis Kompleksitas Algoritma
+### Analisis Kompleksitas Algoritma
 
 **Kompleksitas Waktu (Time Complexity):** Menggunakan struktur Adjacency List dan Min-Heap Priority Queue, kompleksitas algoritma Dijkstra yang diimplementasikan adalah *$O((V + E) \log V)$*, di mana $V$ adalah jumlah simpul dan $E$ adalah jumlah sisi. Proses ini sangat cepat untuk ukuran graf skala lokal.
 
@@ -307,7 +314,7 @@ Pengujian dilakukan untuk membuktikan keakuratan sistem pendukung keputusan dala
 
 
 
-### 5.2.2 Kelebihan dan Kekurangan Sistem
+### 5.3 Kelebihan dan Kekurangan Sistem
 
 **Kelebihan:** 
 * Interface interaktif, responsif, dan mudah digunakan langsung lewat web browser berkat framework Streamlit.
