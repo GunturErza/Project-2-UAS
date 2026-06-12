@@ -73,13 +73,11 @@ Sistem ini menggunakan jenis graf *Undirected Weighted Graph*.
 *Aktor:* Pengguna / Mahasiswa.
 
 * Aktivitas:
-1. Melihat Informasi Proyek UAS (Melalui Sidebar).
-2. Menentukan Filter Budget Kost (Menggunakan slider input).
-3. Melihat Rekomendasi Kost Terbaik AI (Hasil kalkulasi utilitas tertinggi).
-4. Memilih Kost untuk Dianalisis (Melalui dropdown selectbox).
-5. Melihat Analisis Breakdown Skor AI (Rincian bobot rating, fasilitas, penalti jarak, dan harga).
-6. Melihat Rute Terpendek & Live Route Map (Integrasi peta Folium dan algoritma Dijkstra).
-7. Melihat Analisis Teori Struktur Graf (Topologi Jaringan NetworkX & Tabel Analisis Sentralitas).
+1. Menentukan Filter Budget Kost (Menggunakan slider input).
+2. Melihat Rekomendasi Kost Terbaik AI (Hasil kalkulasi utilitas tertinggi).
+3. Memilih Kost untuk Dianalisis (Melalui dropdown selectbox).
+4. Melihat Analisis Breakdown Skor AI (Rincian bobot rating, fasilitas, penalti jarak, dan harga).
+5. Melihat Rute Terpendek & Live Route Map (Integrasi peta Folium dan algoritma Dijkstra).
 
 <img width="1408" height="768" alt="UseCase" src="https://github.com/user-attachments/assets/46f0f3a3-5655-45be-9288-1857d1825eb2" />
 
