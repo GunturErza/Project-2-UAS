@@ -34,8 +34,8 @@ Untuk mengatasi masalah tersebut, diperlukan sebuah Sistem Pendukung Keputusan (
 3. Menyediakan aplikasi web interaktif menggunakan framework Streamlit yang berfungsi sebagai alat bantu pengambilan keputusan bagi mahasiswa dalam memilih kost berdasarkan preferensi personal.
 
 ### 1.4 Manfaat
-* *Bagi Mahasiswa:* Mempermudah pencarian kost yang efisien secara jarak dan sesuai dengan kondisi finansial secara cepat dan akurat.
-* *Bagi Pengembang:* Meningkatkan pemahaman teknis mengenai pemodelan data relasional, kalkulasi kompleksitas algoritma, dan visualisasi data berbasis network.
+* **Bagi Mahasiswa:** Mempermudah proses pencarian rumah kost secara cepat dan tepat, serta meminimalkan risiko kesalahan memilih lokasi lewat transparansi data rute jalan, rincian fasilitas, dan estimasi biaya.
+* **Bagi Pengembangan Ilmu Komputer:** Menjadi referensi aplikatif dan bukti konkret bahwa teori Struktur Data Graf bukan sekadar konsep abstrak di atas kertas, melainkan instrumen kuat yang dapat diintegrasikan dengan framework modern untuk menyelesaikan problem komputasi spasial di dunia nyata.
   
 ---
 
