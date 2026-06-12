@@ -17,9 +17,9 @@
 
 ## BAB 1: PENDAHULUAN
 ### 1.1 Latar Belakang
-Pemilihan tempat tinggal atau kost bagi mahasiswa baru maupun mahasiswa aktif merupakan salah satu keputusan penting yang memengaruhi kenyamanan belajar dan efisiensi finansial. Seringkali mahasiswa menghadapi dilema dalam menyeimbangkan antara batasan anggaran (budget) bulanan dengan aksesibilitas lokasi, seperti jarak tempuh menuju kampus serta kedekatan dengan fasilitas penunjang (minimarket, tempat makan, atau laundry).
+Menemukan tempat tinggal atau kost yang strategis, ekonomis, dan memiliki fasilitas memadai merupakan salah satu permasalahan utama yang dihadapi oleh mahasiswa rantau di Institut Bisnis dan Teknologi Indonesia (INSTIKI). Wilayah Panjer, Denpasar memiliki kompleksitas tinggi terkait variasi harga sewa, kelengkapan fasilitas, serta kondisi lalu lintas seperti jalur satu arah (one-way). Proses pemilihan yang dilakukan secara manual sering kali tidak objektif dan memakan waktu lama.
 
-Untuk mempermudah proses pengambilan keputusan ini, diperlukan sebuah sistem pendukung keputusan atau Decision Support System (DSS) yang tidak hanya memfilter data secara tabular, tetapi juga mampu memodelkan relasi spasial antar lokasi.   Struktur data Graph (Graf) merupakan model matematika yang sangat ideal untuk merepresentasikan entitas lokasi sebagai simpul (node/vertex) dan jalur penghubung beserta jaraknya sebagai sisi (edge). Dengan mengimplementasikan algoritma pencarian jalur terpendek seperti Dijkstra pada jaringan graf ini, sistem dapat memberikan rekomendasi kost terbaik yang sesuai dengan anggaran sekaligus mengoptimalkan rute perjalanan harian mahasiswa menuju kampus.
+Untuk mengatasi masalah tersebut, konsep teori Graph (Graf) dapat diterapkan sebagai basis pemodelan sistem relasional dunia nyata. Dengan memetakan lokasi kost dan persimpangan jalan sebagai simpul (node), serta jarak jalan raya sebagai sisi (edge), kita dapat membangun sebuah Decision Support System (DSS) atau Sistem Pendukung Keputusan yang cerdas. Melalui integrasi algoritma pencarian lintasan terpendek dan pembobotan multi-kriteria, sistem ini mampu menghasilkan rekomendasi hunian terbaik secara cepat, efisien, dan terukur.
 
 ### 1.2 Rumusan Masalah
 1. Bagaimana cara memodelkan data kost, fasilitas penunjang, dan kampus ke dalam struktur data Graph?
