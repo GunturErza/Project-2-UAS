@@ -404,7 +404,12 @@ Untuk meningkatkan nilai guna sistem di masa mendatang, beberapa poin pengembang
 ## 5. Live Tracking & Navigasi Berbasis GPS
 * **Kondisi Saat Ini:** Peta hanya bersifat statis menampilkan rute dari titik *A* ke titik *B*.
 * **Saran Pengembangan:**
-  * Menggunakan API Geolokasi HTML5 untuk mendeteksi koordinat GPS *real-time* dari perangkat pengguna.
-  * Sistem dapat memandu mahasiswa bergerak dari posisi mereka saat ini (*Current Location*) menuju lokasi kost target dengan indikator navigasi yang bergerak secara dinamis di atas peta Folium.
+
+## 5. kesimpulan
+* **Pemodelan yang Optimal:** Teori Graf mampu memetakan rute jalanan Panjer dan aturan satu arah dengan akurasi tinggi sesuai skenario data yang diinput.
+* **Performa Masa Depan (Scalable):** Kombinasi Algoritma Dijkstra dan Min-Heap memastikan kalkulasi tetap instan, siap dikembangkan untuk skala data yang lebih luas.
+* **Keputusan Lebih Objektif:** Fitur AI Smart Scoring efektif menekan faktor tebak-tebakan (subjektivitas) mahasiswa saat memilih kost.
+   * Menggunakan API Geolokasi HTML5 untuk mendeteksi koordinat GPS *real-time* dari perangkat pengguna.
+   * Sistem dapat memandu mahasiswa bergerak dari posisi mereka saat ini (*Current Location*) menuju lokasi kost target dengan indikator navigasi yang bergerak secara dinamis di atas peta Folium.
 
 ---
