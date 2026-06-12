@@ -24,9 +24,9 @@ Selain itu, kompleksitas tata kota di area Panjer, seperti adanya aturan jalan s
 Untuk mengatasi masalah tersebut, diperlukan sebuah Sistem Pendukung Keputusan (Decision Support System/DSS) yang mampu memodelkan jaringan jalan sekaligus menganalisis alternatif kost secara objektif. Teori Graf (*Graph Theory*) merupakan pendekatan terbaik untuk memetakan masalah ini, di mana lokasi kost dan persimpangan bertindak sebagai simpul (*Node*), dan jalan raya sebagai sisi (*Edge*). Dengan mengimplementasikan Algoritma Dijkstra yang dioptimasi menggunakan antrean prioritas *Min-Heap* serta dikombinasikan dengan *AI Smart Scoring Engine*, sistem ini mampu menyajikan navigasi rute terpendek yang patuh hukum sekaligus memberikan rekomendasi hunian dengan kalkulasi yang rasional dan seimbang.
 
 ### 1.2 Rumusan Masalah
-1. Bagaimana cara memodelkan data kost, fasilitas penunjang, dan kampus ke dalam struktur data Graph?
-2. Bagaimana cara mengimplementasikan Algoritma Dijkstra dalam melakukan pencarian jalur terpendek dan optimasi keputusan pemilihan kost berdasarkan batas budget pengguna?
-3. Bagaimana merancang interface aplikasi DSS yang interaktif untuk memvisualisasikan jaringan graf secara real-time?
+1. Bagaimana mengabstraksikan jaringan jalan nyata dan aturan lalu lintas satu arah (*one-way*) di area Panjer ke dalam model struktur data Graf (*Adjacency List*) yang efisien di memori?
+2. Bagaimana mengimplementasikan Algoritma Dijkstra dengan optimasi *Min-Heap* (`heapq`) agar kalkulasi rute terpendek dari kost ke kampus INSTIKI berjalan instan dan siap untuk skala data yang lebih luas (*scalable*)?
+3. Bagaimana merancang formula penilaian (*Scoring Engine*) yang adil untuk menyatukan berbagai variabel dengan dimensi satuan yang berbeda (harga jutaan rupiah, jarak ratusan meter, dan rating skala kecil) tanpa saling mendominasi?
 
 ### 1.3 Tujuan
 1. Memahami dan mengaplikasikan implementasi nyata dari struktur data graph dalam pemecahan masalah dunia nyata.
